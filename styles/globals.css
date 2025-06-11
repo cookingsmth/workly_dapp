@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === Переменные === */
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-gradient: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  --danger-gradient: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+}
+
+/* === Базовые стили === */
+body {
+  background-color: #111827; /* bg-gray-900 */
+  color: #fff;                /* text-white */
+  overflow-x: hidden;
+}
+
+/* === Компонентные и утилитные классы === */
+@layer components {
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-40;
+  }
+
+  .modal-content {
+    @apply fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50;
+    @apply bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-8;
+    @apply border border-white/10 shadow-2xl;
+    @apply max-w-lg w-full max-h-[90vh] overflow-y-auto;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20;
+    @apply text-white placeholder-gray-400;
+    @apply focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50;
+    @apply transition-all duration-300;
+  }
+
+  .form-input:hover {
+    @apply border-white/30 bg-white/10;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-purple-600 to-blue-600 text-white;
+    @apply hover:from-purple-700 hover:to-blue-700;
+    @apply transform hover:scale-105 transition-all duration-300;
+    @apply shadow-lg hover:shadow-purple-500/50;
+  }
+
+  .btn-secondary {
+    @apply bg-white/10 text-white border border-white/20;
+    @apply hover:bg-white/20 hover:border-white/40;
+    @apply transform hover:scale-105 transition-all duration-300;
+  }
+
+  .rainbow-border {
+    position: relative;
+    background: linear-gradient(
+      90deg,
+      #ff0000,
+      #ff7300,
+      #fffb00,
+      #48ff00,
+      #00ffd5,
+      #002bff,
+      #7a00ff,
+      #ff00c8,
+      #ff0000
+    );
+    background-size: 400%;
+    animation: gradient-shift 10s ease infinite;
+    padding: 2px;
+    border-radius: 16px;
+  }
+
+  .rainbow-border > * {
+    background: #0b0f1a;
+    border-radius: 14px;
+    padding: 1rem;
+  }
+}
+
+@layer utilities {
+  .glass-morphism {
+    @apply bg-white bg-opacity-5 backdrop-blur-md border border-white/10;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent;
+  }
+
+  .cyber-border {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cyber-border::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  .cyber-border:hover::before {
+    left: 100%;
+  }
+
+  .neon-glow {
+    text-shadow:
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 30px currentColor,
+      0 0 40px currentColor;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #1f2937; /* bg-gray-800 */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-purple-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-purple-500;
+  }
+
+  /* Анимации */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: float-slow 12s ease-in-out infinite;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
+
+  .animate-gradient-shift {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.5s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.5s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out;
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  .animate-in {
+    animation: scale-in 0.3s ease-out;
+  }
+
+  .animate-out {
+    animation: scale-in 0.3s ease-out reverse;
+  }
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  .glass-morphism {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .animate-float,
+  .animate-float-slow {
+    animation: none;
+  }
+}
+
+/* Keyframes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+  }
+  33% {
+    transform: translateY(-30px) translateX(20px) scale(1.02);
+  }
+  66% {
+    transform: translateY(20px) translateX(-20px) scale(0.98);
+  }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(147, 51, 234, 0.5); }
+  50% { box-shadow: 0 0 40px rgba(147, 51, 234, 0.8); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+@layer components {
+  .nav-button {
+    @apply inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-semibold 
+           transition-all duration-300 bg-white/5 text-white border border-white/10 
+           hover:bg-white/10 hover:shadow-md;
+  }
+
+  .nav-button.gradient {
+    @apply bg-gradient-to-r from-purple-600 to-blue-600 border-0 
+           hover:from-purple-500 hover:to-blue-500;
+  }
+
+  .nav-button.danger {
+    @apply bg-gradient-to-r from-red-500 to-pink-500 border-0 
+           hover:from-red-600 hover:to-pink-600 text-white;
+  }
+
+  .nav-button .icon {
+    @apply text-lg;
+  }
+}
