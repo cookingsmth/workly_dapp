@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
 
+type SolPrice = {
+  price: number;
+  change24h: number;
+};
+
 const CompactSolPrice = () => {
-  const [solPrice, setSolPrice] = useState(null);
+  const [solPrice, setSolPrice] = useState<SolPrice | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchSolPrice = async () => {
     try {
       const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd&include_24hr_change=true');
       const data = await response.json();
-      
+
       if (data.solana) {
         setSolPrice({
           price: data.solana.usd,
@@ -47,29 +52,28 @@ const CompactSolPrice = () => {
         <div className="flex items-center gap-2">
           {/* SOL Icon */}
           <div className="w-4 h-4 flex-shrink-0">
-            <img 
-              src="/solana.png" 
-              alt="SOL" 
+            <img
+              src="/solana.png"
+              alt="SOL"
               className="w-4 h-4"
             />
           </div>
-          
+
           {/* Price */}
           {solPrice && (
             <div className="flex items-center gap-2">
               <span className="text-green-400 font-semibold text-sm">
                 ${solPrice.price.toFixed(2)}
               </span>
-              
+
               {/* Change indicator */}
-              <div className={`text-xs ${
-                solPrice.change24h >= 0 ? 'text-green-400' : 'text-red-400'
-              }`}>
+              <div className={`text-xs ${solPrice.change24h >= 0 ? 'text-green-400' : 'text-red-400'
+                }`}>
                 {solPrice.change24h >= 0 ? '↗' : '↘'} {Math.abs(solPrice.change24h).toFixed(1)}%
               </div>
             </div>
           )}
-          
+
           {/* Live indicator */}
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse flex-shrink-0"></div>
         </div>
@@ -78,7 +82,6 @@ const CompactSolPrice = () => {
   );
 };
 
-// Еще более минималистичная версия
 export const MiniSolPrice = () => {
   const [solPrice, setSolPrice] = useState(null);
 
@@ -112,7 +115,7 @@ export const MiniSolPrice = () => {
   );
 };
 
-// Супер компактная версия - только цена
+
 export const TinySolPrice = () => {
   const [solPrice, setSolPrice] = useState(null);
 
