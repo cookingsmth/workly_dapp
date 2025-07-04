@@ -1,0 +1,65 @@
+[
+  {
+    "id": "chat_task_1750774313656_v7krv8khh_1750284885840_1750268427941",
+    "taskId": "task_1750774313656_v7krv8khh",
+    "clientId": "1750284885840",
+    "freelancerId": "1750268427941",
+    "createdAt": "2025-06-24T14:13:46.457Z",
+    "lastMessageAt": "2025-06-29T21:56:09.354Z",
+    "messages": [
+      {
+        "id": "msg_1751228213288_8dcsx6667",
+        "senderId": "1750284885840",
+        "text": "📎 test-image.jpg",
+        "timestamp": "2025-06-29T20:16:53.288Z",
+        "status": "sent",
+        "fileUrl": "https://via.placeholder.com/300x200.jpg",
+        "fileName": "test-image.jpg",
+        "fileType": "text/plain"
+      },
+      {
+        "id": "msg_1751228320864_zo3kaibck",
+        "senderId": "1750284885840",
+        "text": "📎 test-image.jpg",
+        "timestamp": "2025-06-29T20:18:40.864Z",
+        "status": "sent",
+        "fileUrl": "https://via.placeholder.com/300x200.jpg",
+        "fileName": "test-image.jpg",
+        "fileType": "text/plain"
+      },
+      {
+        "id": "msg_1751228546316_8yri44h3m",
+        "senderId": "1750284885840",
+        "text": "📎 фцвфв.txt",
+        "timestamp": "2025-06-29T20:22:26.317Z",
+        "status": "sent",
+        "fileUrl": "/uploads/chat/1750284885840_1751228546307.txt",
+        "fileName": "фцвфв.txt",
+        "fileType": "text/plain"
+      },
+      {
+        "id": "msg_1751234166953_fngrgsnzj",
+        "senderId": "1750268427941",
+        "text": "awdawdawd",
+        "timestamp": "2025-06-29T21:56:06.953Z",
+        "status": "sent"
+      },
+      {
+        "id": "msg_1751234169354_83w4irbbd",
+        "senderId": "1750268427941",
+        "text": "dawdawd",
+        "timestamp": "2025-06-29T21:56:09.354Z",
+        "status": "sent"
+      }
+    ]
+  },
+  {
+    "id": "chat_task_1750774313656_v7krv8khh_1750268427941_1750268427941",
+    "taskId": "task_1750774313656_v7krv8khh",
+    "clientId": "1750268427941",
+    "freelancerId": "1750268427941",
+    "createdAt": "2025-06-24T14:47:51.798Z",
+    "lastMessageAt": "2025-06-24T14:47:51.798Z",
+    "messages": []
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "1750718257199",
+    "type": "wallet_created",
+    "userId": "1750268427941",
+    "walletAddress": "EqFcaGSSmEZQpQvAiRm1vtGNMW7kYgad2JxkSP5Ubzpy",
+    "timestamp": "2025-06-23T22:37:37.199Z"
+  },
+  {
+    "id": "1750776312391",
+    "type": "workly_reward",
+    "userId": "1750268427941",
+    "amount": 0.00975,
+    "token": "WORKLY",
+    "timestamp": "2025-06-24T14:45:12.391Z"
+  },
+  {
+    "id": "1750776312392",
+    "type": "task_completed",
+    "userId": "1750268427941",
+    "taskId": "task_1750774313656_v7krv8khh",
+    "amount": 0.975,
+    "token": "SOL",
+    "txHash": "3RPMmMgYbxCxGsyhsza6yEZpCEr9GSQDvy3b5tECHkEGTGxfoCG35N5k7JixcaoxUYwfkGb8L5wyLree6sEsw7it",
+    "timestamp": "2025-06-24T14:45:12.392Z"
+  },
+  {
+    "id": "1751230845561",
+    "type": "withdrawal",
+    "userId": "1750268427941",
+    "amount": 0.3,
+    "token": "SOL",
+    "toAddress": "FAyJmQVMZZoeWBWt7epbueVYiVjJ1Vncyp1ivW35YeGs",
+    "txHash": "24DyksFrxopRw8EwEMermEc1fWCUPTysAsnE8ogDad8rvQufbzLRDuVGoHrh2AJGLnQKS1HynXx4Cc35uMu678dW",
+    "timestamp": "2025-06-29T21:00:45.561Z"
+  },
+  {
+    "id": "1751230876937",
+    "type": "withdrawal",
+    "userId": "1750268427941",
+    "amount": 0.1,
+    "token": "SOL",
+    "toAddress": "FAyJmQVMZZoeWBWt7epbueVYiVjJ1Vncyp1ivW35YeGs",
+    "txHash": "SLYaz6dopBi3gxeYDGJG8yqShGSC5hgiCgZnAbHtZRwARGC2AEzGEJ5NuRfXTwkfvvahUByZPsS5jL6Km8vzjoZ",
+    "timestamp": "2025-06-29T21:01:16.937Z"
+  },
+  {
+    "id": "1751264562383",
+    "type": "withdrawal",
+    "userId": "1750268427941",
+    "amount": 0.1,
+    "token": "SOL",
+    "toAddress": "7iJtrjEGDTyyMe3o4Yd7BkyGdYVsLj5bUHKpytqMfHjC",
+    "txHash": "3dhBsC3DcW52nv1VnPds8ssSyT3NYTtQGFCCBtSnpq5sJb8n9Fm9U8yb9bUpdggDXzSWWPUWAkBNJfrKN1dTJDzf",
+    "timestamp": "2025-06-30T06:22:42.382Z"
+  }
+]

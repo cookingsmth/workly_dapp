@@ -1,0 +1,76 @@
+[
+  {
+    "id": "1750268123422",
+    "username": "hellokitty",
+    "email": "bedvic@yandex.ru",
+    "password": "$2b$12$hqpS.E.m8FHxycoREKBoWe/ByFDwMdRgU7Qz/y6v1o3p7BY/5S0Uq",
+    "walletAddress": null,
+    "createdAt": "2025-06-18T17:35:23.422Z",
+    "updatedAt": "2025-06-18T17:35:23.422Z",
+    "isEmailVerified": false,
+    "profile": {
+      "bio": "",
+      "avatar": null,
+      "skills": [],
+      "completedTasks": 0,
+      "rating": 0,
+      "totalEarned": 0
+    }
+  },
+  {
+    "id": "1750268160796",
+    "username": "123456",
+    "email": "123456@yandex.ru",
+    "password": "$2b$12$TYVku4cVMF92fUVzacTO9.t.L.foEgD3RSOUQdrGGrkKQqhrSDz.y",
+    "walletAddress": null,
+    "createdAt": "2025-06-18T17:36:00.796Z",
+    "updatedAt": "2025-06-18T17:36:00.796Z",
+    "isEmailVerified": false,
+    "profile": {
+      "bio": "",
+      "avatar": null,
+      "skills": [],
+      "completedTasks": 0,
+      "rating": 0,
+      "totalEarned": 0
+    }
+  },
+  {
+    "id": "1750268427941",
+    "username": "qqqqqq",
+    "email": "eeeeee@yandex.ru",
+    "password": "$2b$12$SYcaLljfj9jzRASOBsYm/.b6zZIgvnhAT0v1pB2hknMZvOIJBktbG",
+    "walletAddress": null,
+    "createdAt": "2025-06-18T17:40:27.941Z",
+    "updatedAt": "2025-06-18T17:40:27.941Z",
+    "isEmailVerified": false,
+    "profile": {
+      "bio": "",
+      "avatar": null,
+      "skills": [],
+      "completedTasks": 0,
+      "rating": 0,
+      "totalEarned": 0
+    },
+    "lastLoginAt": "2025-06-30T06:35:22.306Z"
+  },
+  {
+    "id": "1750284885840",
+    "username": "tester",
+    "email": "tester@test.com",
+    "password": "$2b$12$mGUWR4QT55jxSNxhggO6l.1gpj.SmNqsaQcs.SnNQg5IJV0KKWilS",
+    "walletAddress": null,
+    "createdAt": "2025-06-18T22:14:45.840Z",
+    "updatedAt": "2025-06-18T22:14:45.840Z",
+    "isEmailVerified": false,
+    "profile": {
+      "bio": "",
+      "avatar": null,
+      "skills": [],
+      "completedTasks": 0,
+      "rating": 0,
+      "totalEarned": 0
+    },
+    "lastLoginAt": "2025-06-30T06:35:39.477Z"
+  }
+]

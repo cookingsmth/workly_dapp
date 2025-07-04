@@ -1,0 +1,36 @@
+[
+  {
+    "id": "1750268427941",
+    "username": "qqqqqq",
+    "email": "eeeeee@yandex.ru",
+    "firstName": "awdawd",
+    "lastName": "awd",
+    "bio": "lololo",
+    "skills": [],
+    "location": "Solana",
+    "website": "wdawdawd",
+    "github": "123awd",
+    "linkedin": "123dawd",
+    "twitter": "123aw",
+    "rating": 0,
+    "completedProjects": 0,
+    "totalEarnings": 0,
+    "joinedAt": "2025-06-19T08:36:00.449Z",
+    "verifiedEmail": true,
+    "verifiedPhone": false,
+    "hourlyRate": 1111
+  },
+  {
+    "id": "1750284885840",
+    "username": "tester",
+    "email": "tester@test.com",
+    "bio": "123123123123",
+    "location": "dawd",
+    "website": "",
+    "github": "",
+    "linkedin": "",
+    "twitter": "",
+    "joinedAt": "2025-06-20T17:48:51.423Z",
+    "updatedAt": "2025-06-30T19:14:18.265Z"
+  }
+]

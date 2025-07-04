@@ -1,17 +1,6 @@
-# dependencies
-node_modules/
-
-# production
-.next/
-dist/
-
-# misc
-.env
-.DS_Store
-
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-/data
+echo node_modules/ > .gitignore
+echo .env >> .gitignore
+echo .next/ >> .gitignore
+echo *.exe >> .gitignore
+echo dist/ >> .gitignore
+echo *.log >> .gitignore

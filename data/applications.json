@@ -1,0 +1,16 @@
+[
+  {
+    "id": "app_1750774385456_ls57vgybu",
+    "taskId": "task_1750774313656_v7krv8khh",
+    "applicantId": "1750268427941",
+    "applicantName": "qqqqqq",
+    "applicantEmail": "eeeeee@yandex.ru",
+    "message": "qweqweqweqeqe",
+    "proposedPrice": 1,
+    "estimatedDays": 7,
+    "portfolio": null,
+    "status": "accepted",
+    "createdAt": "2025-06-24T14:13:05.456Z",
+    "updatedAt": "2025-06-24T14:13:27.798Z"
+  }
+]

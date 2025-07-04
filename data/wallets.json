@@ -1,0 +1,28 @@
+[
+  {
+    "userId": "1750284885840",
+    "publicKey": "7iJtrjEGDTyyMe3o4Yd7BkyGdYVsLj5bUHKpytqMfHjC",
+    "privateKey": "MzdUTnFhNWlDY3QxcXR3ejJndmlySm1BV3hpa3FmeTZydmtDclFWemhOWVhjR3FIdHBKQnZlTktSR0JNMUNKZUVhaERKdG9vQVpLd0tvUmpSNGtHb2VXeg==",
+    "solBalance": 0.1,
+    "usdtBalance": 0,
+    "usdcBalance": 0,
+    "worklyBalance": 0,
+    "totalEarned": 0,
+    "totalSpent": 1,
+    "createdAt": "2025-06-23T00:01:57.084Z",
+    "lastUpdated": "2025-07-02T13:49:29.726Z"
+  },
+  {
+    "userId": "1750268427941",
+    "publicKey": "EqFcaGSSmEZQpQvAiRm1vtGNMW7kYgad2JxkSP5Ubzpy",
+    "privateKey": "MnBqcXdMZ2RVeXhocG1tWnJ1WERFN2I5dzdIdUo5OW41MUNaUkg0TTdrZ0pLRDg3eFN3NUpYWlA0YnRobzJUcXVUYTZ0Njl1OW16c0ZCejdrQmhiQ05vag==",
+    "solBalance": 0.4750000000000001,
+    "usdtBalance": 0,
+    "usdcBalance": 0,
+    "worklyBalance": 0.00975,
+    "totalEarned": 0.975,
+    "totalSpent": 0,
+    "createdAt": "2025-06-23T22:37:37.199Z",
+    "lastUpdated": "2025-06-30T06:22:42.381Z"
+  }
+]

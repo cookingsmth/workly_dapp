@@ -1,0 +1,39 @@
+[
+  {
+    "id": "1750268427941",
+    "email": "eeeeee@yandex.ru",
+    "name": "qqqqqq",
+    "username": "qqqqqq",
+    "notifications": {
+      "email": true,
+      "push": true,
+      "newTasks": true,
+      "taskUpdates": true,
+      "messages": true,
+      "marketing": false
+    },
+    "privacy": {
+      "profileVisibility": "public",
+      "showEmail": false,
+      "showStats": true,
+      "showCompletedTasks": true
+    },
+    "preferences": {
+      "theme": "dark",
+      "language": "en",
+      "timezone": "UTC",
+      "currency": "USD"
+    },
+    "createdAt": "2025-06-18T17:40:27.941Z",
+    "updatedAt": "2025-06-19T09:30:53.787Z"
+  },
+  {
+    "id": "1750284885840",
+    "email": "tester@test.com",
+    "name": "tester",
+    "username": "tester",
+    "createdAt": "2025-06-18T22:14:45.840Z",
+    "updatedAt": "2025-06-30T19:27:59.047Z",
+    "bio": "хуй"
+  }
+]

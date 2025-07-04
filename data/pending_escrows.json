@@ -1,0 +1,152 @@
+[
+  {
+    "escrowId": "escrow_1750736704395_ojt67ct58",
+    "escrowAddress": "FTNRqZfZzWrwCJPr6MpmTY4qJVBqqcA1uocypXxiUaPe",
+    "escrowPrivateKey": "NWZHUERmZzRNR25CQ1VnWHVNRHVyQlpLaGttc3Q4M1ZES01aR3I1MmZ5bUF2Y1kxY3RFNHRQYVU5alFlM25vY0E2SEhDYUxSc2Y3UjJGUkNHM1RaTEgzMg==",
+    "clientId": "1750268427941",
+    "amount": 1231,
+    "token": "SOL",
+    "status": "pending_payment",
+    "createdAt": "2025-06-24T03:45:04.395Z",
+    "platformFee": 30.775000000000002,
+    "netAmount": 1200.225,
+    "taskData": {
+      "title": "123123123213",
+      "description": "12312321312312312312",
+      "deadline": "2025-06-25T03:45:00.000Z",
+      "requirements": [],
+      "tags": [],
+      "isUrgent": false,
+      "createdBy": "1750268427941",
+      "reward": {
+        "amount": 1231,
+        "token": "SOL"
+      }
+    }
+  },
+  {
+    "escrowId": "escrow_1750798582068_23ebssjd1",
+    "escrowAddress": "4BxdE2423zrA4YvfWR7zkVoeHGSuRMyWuNFZpwajvvYC",
+    "escrowPrivateKey": "M3ZvWVJYaEFlcFNVbzVURVozVFBMYmpDNDdINWtCVjhEcVpKZ0FxUDV0RUQ5dTNDV1NyWUZINDg1RWZ0WmJDZGIyMlVENlQ2UGJrWWRub0ZCMVdidDd1dg==",
+    "clientId": "1750268427941",
+    "amount": 0.1,
+    "token": "SOL",
+    "status": "pending_payment",
+    "createdAt": "2025-06-24T20:56:22.068Z",
+    "platformFee": 0.0025000000000000005,
+    "netAmount": 0.0975,
+    "taskData": {
+      "title": "фцвфцвфц",
+      "description": "фцвфцвфцвфцвфцвфцвфцв",
+      "deadline": "2025-06-25T20:56:00.000Z",
+      "requirements": [],
+      "tags": [],
+      "isUrgent": false,
+      "createdBy": "1750268427941",
+      "reward": {
+        "amount": 0.1,
+        "token": "SOL"
+      }
+    }
+  },
+  {
+    "escrowId": "escrow_1750798719207_jdxz6zlh7",
+    "escrowAddress": "GFbzWfV69CRVvt46z6FgHQkREcCNTmpvrXVXGcqLzyh9",
+    "escrowPrivateKey": "MkZzSGU3UGJrUTljV1E1QWFGYXBQTm16WnhyeGtIU3ozdmtRUEJ4NkFGRW1OUjdEbW9QeHRMZGcxM2p3U1JBdkpiTThzRGtUd21rQlBFdmdEQm8xcjloeQ==",
+    "clientId": "1750268427941",
+    "amount": 0.1,
+    "token": "SOL",
+    "status": "pending_payment",
+    "createdAt": "2025-06-24T20:58:39.207Z",
+    "platformFee": 0.0025000000000000005,
+    "netAmount": 0.0975,
+    "taskData": {
+      "title": "фцвфцвфц",
+      "description": "фцвфцвфцвфцвфцвфцвфцв",
+      "deadline": "2025-06-25T20:56:00.000Z",
+      "requirements": [],
+      "tags": [],
+      "isUrgent": false,
+      "createdBy": "1750268427941",
+      "reward": {
+        "amount": 0.1,
+        "token": "SOL"
+      }
+    }
+  },
+  {
+    "escrowId": "escrow_1750798833067_yuuh4sfci",
+    "escrowAddress": "5UZLHJhN4KEMVwwqjDy1vK1KxSbbt1b7Uk3S8mfePVip",
+    "escrowPrivateKey": "M05BZmYxVkNYUzFWZ3I1azI0UlE0WlUxQWZDckt3ZDJmaUduZjQ5WG1oS2hINFlRVnM0ejJkcDlTMlA2ZURzQTZ4WlNiVWtZdEtDRmhKSHlHYjdFVUIxeg==",
+    "clientId": "1750268427941",
+    "amount": 0.1,
+    "token": "SOL",
+    "status": "pending_payment",
+    "createdAt": "2025-06-24T21:00:33.067Z",
+    "platformFee": 0.0025000000000000005,
+    "netAmount": 0.0975,
+    "taskData": {
+      "title": "фцвфцвфц",
+      "description": "фцвфцвфцвфцвфцвфцвфцв",
+      "deadline": "2025-06-25T20:56:00.000Z",
+      "requirements": [],
+      "tags": [],
+      "isUrgent": false,
+      "createdBy": "1750268427941",
+      "reward": {
+        "amount": 0.1,
+        "token": "SOL"
+      }
+    }
+  },
+  {
+    "escrowId": "escrow_1751233171707_c90n6e0a8",
+    "escrowAddress": "8vAVVMR67pfzG7PbttPCmgftNQe2Nd2ogodvovd9mccK",
+    "escrowPrivateKey": "dDlhSFd4aEhoRk1vdUZwYURmMzFZSjNlRXhNdlVIVFNUZGU5bVl4TFBwbXBiSmRYRUdHUXU0cENCM1l1ZXZOZ2g1U0Q2a2JjTFlYOG12cEp1SFdpRTNE",
+    "clientId": "1750268427941",
+    "amount": 1,
+    "token": "SOL",
+    "status": "pending_payment",
+    "createdAt": "2025-06-29T21:39:31.708Z",
+    "platformFee": 0.025,
+    "netAmount": 0.975,
+    "taskData": {
+      "title": "123123123123",
+      "description": "123123123123123123123",
+      "deadline": "2025-06-30T21:38:00.000Z",
+      "requirements": [],
+      "tags": [],
+      "isUrgent": false,
+      "createdBy": "1750268427941",
+      "reward": {
+        "amount": 1,
+        "token": "SOL"
+      }
+    }
+  },
+  {
+    "escrowId": "escrow_1751234120457_2kw47aoiy",
+    "escrowAddress": "63h41HD2Uj4ceFwgmDbeBSoaPv1vDW45G1rvf4ZjKGEj",
+    "escrowPrivateKey": "NFptQ0xNUFJKdW9HYmpNU2JjYkhrMUp5TW53bW5vSE03ZjJYQkNzTGZoeTVMelpLYVVtUnRMTkhBeEtBRnFGN3Vidkc4OExZWGhWWVBzdWo2WnhZUnFQVg==",
+    "clientId": "1750268427941",
+    "amount": 10,
+    "token": "SOL",
+    "status": "pending_payment",
+    "createdAt": "2025-06-29T21:55:20.457Z",
+    "platformFee": 0.25,
+    "netAmount": 9.75,
+    "taskData": {
+      "title": "123123123123123123",
+      "description": "123123123123123123123",
+      "deadline": "2025-06-30T21:54:00.000Z",
+      "requirements": [],
+      "tags": [],
+      "isUrgent": true,
+      "createdBy": "1750268427941",
+      "reward": {
+        "amount": 10,
+        "token": "SOL"
+      }
+    }
+  }
+]

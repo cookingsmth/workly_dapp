@@ -1,0 +1,36 @@
+[
+  {
+    "id": "task_1750774313656_v7krv8khh",
+    "title": "lalalalala",
+    "description": "mpmpmpmpmpmpmpmpmpmp",
+    "reward": {
+      "amount": 1,
+      "token": "SOL"
+    },
+    "deadline": "2025-06-25T14:10:00.000Z",
+    "createdBy": "1750284885840",
+    "status": "completed",
+    "createdAt": "2025-06-24T14:11:53.656Z",
+    "updatedAt": "2025-06-30T13:06:52.573Z",
+    "fundedAt": "2025-06-24T14:11:53.557Z",
+    "applicants": [
+      "1750268427941"
+    ],
+    "requirements": [],
+    "tags": [],
+    "isUrgent": false,
+    "viewCount": 27,
+    "escrowAddress": "84bcHPCvNeANBscJ2ZwaEZ2pjRFGwfWiLbdUGyABYFFy",
+    "escrowId": "escrow_1750774244421_2el6avq41",
+    "platformFee": 0.025,
+    "netAmount": 0.975,
+    "applicationCount": 1,
+    "assignedTo": "1750268427941",
+    "assignedAt": "2025-06-24T14:13:27.799Z",
+    "workerConfirmed": true,
+    "workerConfirmedAt": "2025-06-24T14:14:05.807Z",
+    "clientConfirmed": true,
+    "clientConfirmedAt": "2025-06-24T14:45:12.187Z",
+    "completedAt": "2025-06-29T15:10:03.186Z"
+  }
+]
