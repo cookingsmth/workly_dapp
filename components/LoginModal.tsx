@@ -22,10 +22,11 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
     const result = await login(username, password)
     
     if (result.success) {
-      // Очищаем форму и закрываем модал
+      // Очищаем форму, закрываем модал и принудительно обновляем страницу
       setUsername('')
       setPassword('')
       onClose()
+      window.location.href = '/'
     }
     setIsSubmitting(false)
   }

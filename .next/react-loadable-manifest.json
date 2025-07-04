@@ -1,1 +1,14 @@
-{}
+{
+  "index.tsx -> three": {
+    "id": "index.tsx -> three",
+    "files": [
+      "static/chunks/node_modules_three_build_three_module_js.js"
+    ]
+  },
+  "index.tsx -> vanta/dist/vanta.net.min": {
+    "id": "index.tsx -> vanta/dist/vanta.net.min",
+    "files": [
+      "static/chunks/node_modules_vanta_dist_vanta_net_min_js.js"
+    ]
+  }
+}

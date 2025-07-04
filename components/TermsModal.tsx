@@ -15,7 +15,7 @@ export function TermsModal({ isOpen, onClose }: TermsModalProps) {
           <p><strong>1. Acceptance of Terms:</strong> By using Workly, you agree to these terms and our Privacy Policy.</p>
           <p><strong>2. Eligibility:</strong> You must be at least 13 years old.</p>
           <p><strong>3. User Accounts:</strong> You are responsible for your account info and credentials.</p>
-          <p><strong>4. Tasks and Rewards:</strong> Users can post tasks, approve work, and pay in crypto (SOL, USDC, USDT).</p>
+          <p><strong>4. Tasks and Rewards:</strong> Users can post tasks, approve work, and pay in crypto (SOL).</p>
           <p><strong>5. Prohibited Conduct:</strong> No spam, scams, fraud, or abuse.</p>
           <p><strong>6. No Guarantees:</strong> We are not liable for missed payments or platform issues.</p>
           <p><strong>7. Termination:</strong> We can terminate access for violations.</p>
