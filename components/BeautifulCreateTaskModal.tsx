@@ -270,7 +270,7 @@ export default function CreateTaskModal({ onClose, onCreate }: CreateTaskModalPr
       }
 
       const result = await response.json()
-      setEscrowData(prev => ({ ...prev, task: result.task }))
+      setEscrowData((prev: any)=> ({ ...prev, task: result.task }))
       setStep('success')
     } catch (err) {
       console.error('Create task error:', err)
@@ -629,7 +629,6 @@ export default function CreateTaskModal({ onClose, onCreate }: CreateTaskModalPr
             </div>
           )}
 
-          {/* ПРОДОЛЖЕНИЕ В ЧАСТИ 2 */}
           {step === 'details' && (
             <div className="space-y-8">
               {/* Reward Section */}
@@ -647,7 +646,6 @@ export default function CreateTaskModal({ onClose, onCreate }: CreateTaskModalPr
                       onChange={(e) => {
                         const val = e.target.value
 
-                        // Разрешаем только числа и максимум одну точку
                         if (/^\d*\.?\d*$/.test(val)) {
                           setInputValue(val)
                           const num = parseFloat(val)
@@ -1037,8 +1035,6 @@ export default function CreateTaskModal({ onClose, onCreate }: CreateTaskModalPr
               </div>
             </div>
           )}
-
-          {/* Enhanced Success Step - замените step === 'success' в BeautifulCreateTaskModal.tsx */}
           {step === 'success' && (
             <div className="space-y-8 text-center relative overflow-hidden">
               {/* Animated Background Effects */}
@@ -1248,7 +1244,6 @@ export default function CreateTaskModal({ onClose, onCreate }: CreateTaskModalPr
                       disabled={checkingPayment}
                       className="flex-1 group relative overflow-hidden flex items-center justify-center gap-2 py-4 px-6 bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600/50 hover:border-gray-500/50 rounded-2xl transition-all duration-300 disabled:opacity-50 font-medium backdrop-blur-sm"
                     >
-                      {/* Тонкий hover эффект */}
                       <div className="absolute inset-0 bg-gradient-to-r from-gray-600/10 to-gray-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
 
                       <ArrowLeftIcon className="h-4 w-4 text-gray-300 group-hover:text-white transition-colors relative z-10" />
@@ -1343,10 +1338,11 @@ export default function CreateTaskModal({ onClose, onCreate }: CreateTaskModalPr
                     )}
                   </>
                 )}
+                
               </div>
             </div>
-          </div>
-        </div>
+          </div> 
+        </div> 
       </div>
     </Modal>
   )
