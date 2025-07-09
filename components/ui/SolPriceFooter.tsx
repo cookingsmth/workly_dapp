@@ -83,7 +83,7 @@ const CompactSolPrice = () => {
 };
 
 export const MiniSolPrice = () => {
-  const [solPrice, setSolPrice] = useState(null);
+  const [solPrice, setSolPrice] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchPrice = async () => {
@@ -107,7 +107,7 @@ export const MiniSolPrice = () => {
         <div className="flex items-center gap-1.5 text-xs">
           <span className="text-orange-400">◉</span>
           <span className="text-white font-medium">
-            ${solPrice?.toFixed(2) || '---'}
+            ${typeof solPrice === 'number' ? solPrice.toFixed(2) : '---'}
           </span>
         </div>
       </div>
@@ -117,7 +117,7 @@ export const MiniSolPrice = () => {
 
 
 export const TinySolPrice = () => {
-  const [solPrice, setSolPrice] = useState(null);
+  const [solPrice, setSolPrice] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchPrice = async () => {
@@ -138,7 +138,7 @@ export const TinySolPrice = () => {
   return (
     <div className="fixed bottom-4 left-4 z-50">
       <div className="bg-gray-800/80 rounded-md px-2 py-1 text-xs text-green-400 font-mono border border-gray-600">
-        ${solPrice?.toFixed(2) || '---'}
+        ${typeof solPrice === 'number' ? solPrice.toFixed(2) : '---'}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-// pages/api/profile/stats.ts
+
 import { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
@@ -76,7 +76,7 @@ const verifyToken = (token: string) => {
   }
 }
 
-const getUserFromToken = (authHeader: string) => {
+const getUserFromToken = (authHeader: string | undefined) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }
@@ -131,7 +131,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         total: acceptedApplications.length,
         completed: assignedTasks.filter((task: any) => task.status === 'completed').length,
         inProgress: assignedTasks.filter((task: any) => task.status === 'in_progress').length,
-        rating: 4.8, // Пока статическое значение, можно добавить систему рейтингов
+        rating: 4.8,
         totalEarnings: assignedTasks
           .filter((task: any) => task.status === 'completed')
           .reduce((sum: number, task: any) => sum + (task.reward?.amount || 0), 0)

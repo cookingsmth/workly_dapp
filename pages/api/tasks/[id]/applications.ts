@@ -1,10 +1,9 @@
-// pages/api/tasks/[id]/applications.ts
+
 import { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
 import jwt from 'jsonwebtoken'
 
-// Функции для работы с файлами
 const getApplicationsFilePath = () => path.join(process.cwd(), 'data', 'applications.json')
 const getTasksFilePath = () => path.join(process.cwd(), 'data', 'tasks.json')
 
@@ -40,7 +39,6 @@ const loadTasks = () => {
   }
 }
 
-// Проверка токена
 const verifyToken = (token: string) => {
   try {
     const decoded = jwt.verify(
@@ -53,7 +51,7 @@ const verifyToken = (token: string) => {
   }
 }
 
-const getUserFromToken = (authHeader: string) => {
+const getUserFromToken = (authHeader: string | undefined) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }
@@ -96,7 +94,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (method === 'GET') {
     try {
-      // Проверяем аутентификацию
       const user = getUserFromToken(req.headers.authorization)
       
       if (!user) {
@@ -106,7 +103,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       }
 
-      // Проверяем что задача существует
       const tasks = loadTasks()
       const task = tasks.find((t: any) => t.id === id)
       
@@ -117,7 +113,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       }
 
-      // Проверяем права доступа (только создатель задачи может видеть заявки)
       if (task.createdBy !== user.id) {
         return res.status(403).json({
           error: 'Forbidden',
@@ -125,11 +120,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       }
 
-      // Получаем заявки для этой задачи
       const applications = loadApplications()
       const taskApplications = applications.filter((app: any) => app.taskId === id)
 
-      // Сортируем по дате (новые первыми)
       taskApplications.sort((a: any, b: any) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )

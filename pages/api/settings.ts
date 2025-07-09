@@ -40,11 +40,9 @@ interface UserSettings {
   updatedAt?: string
 }
 
-// Пути к файлам
 const getUsersFilePath = () => path.join(process.cwd(), 'data', 'users.json')
 const getSettingsFilePath = () => path.join(process.cwd(), 'data', 'settings.json')
 
-// Функции для работы с файлами
 const loadUsers = () => {
   const filePath = getUsersFilePath()
   
@@ -88,7 +86,6 @@ const saveSettings = (settings: UserSettings[]) => {
   fs.writeFileSync(filePath, JSON.stringify(settings, null, 2))
 }
 
-// Проверка токена
 const verifyToken = (token: string) => {
   try {
     const decoded = jwt.verify(
@@ -101,7 +98,7 @@ const verifyToken = (token: string) => {
   }
 }
 
-const getUserFromToken = (authHeader: string) => {
+const getUserFromToken = (authHeader: string | undefined) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }
@@ -128,7 +125,6 @@ const getUserFromToken = (authHeader: string) => {
   }
 }
 
-// Создание дефолтных настроек
 const createDefaultSettings = (user: any): UserSettings => {
   return {
     id: user.id,
@@ -162,7 +158,6 @@ const createDefaultSettings = (user: any): UserSettings => {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req
 
-  // Проверяем аутентификацию
   const currentUser = getUserFromToken(req.headers.authorization)
   
   if (!currentUser) {
@@ -174,11 +169,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (method === 'GET') {
     try {
-      // Загружаем настройки
       const allSettings = loadSettings()
       let userSettings = allSettings.find(settings => settings.id === currentUser.id)
 
-      // Если настроек нет, создаем дефолтные
       if (!userSettings) {
         userSettings = createDefaultSettings(currentUser)
         allSettings.push(userSettings)
@@ -197,12 +190,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   } else if (method === 'PUT') {
     try {
-      // Обновляем настройки
       const updates = req.body
       const allSettings = loadSettings()
       const settingsIndex = allSettings.findIndex(settings => settings.id === currentUser.id)
 
-      // Валидация username на уникальность (если изменился)
       if (updates.username) {
         const users = loadUsers()
         const existingUser = users.find((u: any) => 
@@ -218,12 +209,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       if (settingsIndex === -1) {
-        // Создаем новые настройки если не существуют
         const newSettings = {
           ...createDefaultSettings(currentUser),
           ...updates,
-          id: currentUser.id, // Защищаем от изменения ID
-          email: currentUser.email, // Защищаем от изменения email
+          id: currentUser.id, 
+          email: currentUser.email,
           updatedAt: new Date().toISOString()
         }
         allSettings.push(newSettings)
@@ -231,18 +221,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         return res.status(201).json(newSettings)
       } else {
-        // Обновляем существующие настройки
         allSettings[settingsIndex] = {
           ...allSettings[settingsIndex],
           ...updates,
-          id: currentUser.id, // Защищаем от изменения ID
-          email: currentUser.email, // Защищаем от изменения email
+          id: currentUser.id,
+          email: currentUser.email, 
           updatedAt: new Date().toISOString()
         }
 
         saveSettings(allSettings)
 
-        // Если обновился username, нужно также обновить его в users.json
         if (updates.username && updates.username !== currentUser.username) {
           const users = loadUsers()
           const userIndex = users.findIndex((u: any) => u.id === currentUser.id)
@@ -266,7 +254,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   } else if (method === 'DELETE') {
     try {
-      // Удалить аккаунт пользователя
       const { confirmPassword } = req.body
 
       if (!confirmPassword || confirmPassword !== 'DELETE_MY_ACCOUNT') {
@@ -275,20 +262,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       }
 
-      // Удаляем все данные пользователя из всех файлов
       const userId = currentUser.id
 
-      // Удаляем из users.json
       const users = loadUsers()
       const filteredUsers = users.filter((u: any) => u.id !== userId)
       fs.writeFileSync(getUsersFilePath(), JSON.stringify(filteredUsers, null, 2))
 
-      // Удаляем из settings.json
       const allSettings = loadSettings()
       const filteredSettings = allSettings.filter(s => s.id !== userId)
       saveSettings(filteredSettings)
 
-      // Удаляем из других файлов если они существуют
       const dataDir = path.join(process.cwd(), 'data')
       const filesToCheck = [
         'profiles.json',

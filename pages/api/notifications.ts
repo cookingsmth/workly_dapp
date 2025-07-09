@@ -15,11 +15,9 @@ interface Notification {
   actionUrl?: string
 }
 
-// Пути к файлам
 const getNotificationsFilePath = () => path.join(process.cwd(), 'data', 'notifications.json')
 const getUsersFilePath = () => path.join(process.cwd(), 'data', 'users.json')
 
-// Функции для работы с файлами
 const loadNotifications = (): Notification[] => {
   const filePath = getNotificationsFilePath()
   
@@ -63,7 +61,6 @@ const loadUsers = () => {
   }
 }
 
-// Проверка токена
 const verifyToken = (token: string) => {
   try {
     const decoded = jwt.verify(
@@ -76,7 +73,7 @@ const verifyToken = (token: string) => {
   }
 }
 
-const getUserFromToken = (authHeader: string) => {
+const getUserFromToken = (authHeader: string | undefined) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }
@@ -105,7 +102,6 @@ const getUserFromToken = (authHeader: string) => {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req
 
-  // Проверяем аутентификацию
   const currentUser = getUserFromToken(req.headers.authorization)
   
   if (!currentUser) {
@@ -117,7 +113,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (method === 'GET') {
     try {
-      // Загружаем уведомления для текущего пользователя
       const allNotifications = loadNotifications()
       const userNotifications = allNotifications
         .filter(notif => notif.userId === currentUser.id)
@@ -138,7 +133,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   } else if (method === 'POST') {
     try {
-      // Создание нового уведомления
       const { type, title, message, actionUrl, targetUserId } = req.body
 
       if (!type || !title || !message) {

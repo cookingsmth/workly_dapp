@@ -1,4 +1,3 @@
-// pages/api/chats.ts
 import { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
@@ -38,19 +37,17 @@ interface ChatPreview {
   lastActivity: string
 }
 
-// Пути к файлам
 const getChatsFilePath = () => path.join(process.cwd(), 'data', 'chats.json')
 const getTasksFilePath = () => path.join(process.cwd(), 'data', 'tasks.json')
 const getUsersFilePath = () => path.join(process.cwd(), 'data', 'users.json')
 
-// Функции для работы с файлами
 const loadChats = (): Chat[] => {
   const filePath = getChatsFilePath()
-  
+
   if (!fs.existsSync(filePath)) {
     return []
   }
-  
+
   try {
     const data = fs.readFileSync(filePath, 'utf8')
     return JSON.parse(data)
@@ -62,11 +59,11 @@ const loadChats = (): Chat[] => {
 
 const loadTasks = () => {
   const filePath = getTasksFilePath()
-  
+
   if (!fs.existsSync(filePath)) {
     return []
   }
-  
+
   try {
     const data = fs.readFileSync(filePath, 'utf8')
     return JSON.parse(data)
@@ -78,11 +75,11 @@ const loadTasks = () => {
 
 const loadUsers = () => {
   const filePath = getUsersFilePath()
-  
+
   if (!fs.existsSync(filePath)) {
     return []
   }
-  
+
   try {
     const data = fs.readFileSync(filePath, 'utf8')
     return JSON.parse(data)
@@ -92,11 +89,10 @@ const loadUsers = () => {
   }
 }
 
-// Проверка токена
 const verifyToken = (token: string) => {
   try {
     const decoded = jwt.verify(
-      token, 
+      token,
       process.env.JWT_SECRET || 'workly-local-secret-key-2025'
     ) as { userId: string }
     return decoded
@@ -105,20 +101,20 @@ const verifyToken = (token: string) => {
   }
 }
 
-const getUserFromToken = (authHeader: string) => {
+const getUserFromToken = (authHeader: string | undefined) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }
 
   const token = authHeader.split(' ')[1]
   const decoded = verifyToken(token)
-  
+
   if (!decoded) return null
 
   try {
     const users = loadUsers()
     const user = users.find((u: any) => u.id === decoded.userId)
-    
+
     if (!user) return null
 
     return {
@@ -134,9 +130,8 @@ const getUserFromToken = (authHeader: string) => {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req
 
-  // Проверяем аутентификацию
   const currentUser = getUserFromToken(req.headers.authorization)
-  
+
   if (!currentUser) {
     return res.status(401).json({
       error: 'Unauthorized',
@@ -146,33 +141,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (method === 'GET') {
     try {
-      // Загружаем данные
       const chats = loadChats()
       const tasks = loadTasks()
       const users = loadUsers()
 
-      // Фильтруем чаты для текущего пользователя
-      const userChats = chats.filter(chat => 
+      const userChats = chats.filter(chat =>
         chat.clientId === currentUser.id || chat.freelancerId === currentUser.id
       )
 
-      // Создаем превью чатов
       const chatPreviews: ChatPreview[] = userChats.map(chat => {
-        // Определяем участника (не текущего пользователя)
-        const participantId = chat.clientId === currentUser.id 
-          ? chat.freelancerId 
+        const participantId = chat.clientId === currentUser.id
+          ? chat.freelancerId
           : chat.clientId
-        
+
         const participant = users.find((u: any) => u.id === participantId)
         const task = tasks.find((t: any) => t.id === chat.taskId)
-        
-        // Последнее сообщение
-        const lastMessage = chat.messages.length > 0 
+
+        const lastMessage = chat.messages.length > 0
           ? chat.messages[chat.messages.length - 1]
           : null
 
-        // Подсчет непрочитанных сообщений
-        const unreadCount = chat.messages.filter(msg => 
+        const unreadCount = chat.messages.filter(msg =>
           msg.senderId !== currentUser.id && msg.status !== 'read'
         ).length
 
@@ -193,8 +182,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       })
 
-      // Сортируем по последней активности
-      chatPreviews.sort((a, b) => 
+      chatPreviews.sort((a, b) =>
         new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime()
       )
 
@@ -212,7 +200,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
   } else {
-    res.status(405).json({ 
+    res.status(405).json({
       error: 'Method not allowed',
       message: `Method ${method} is not supported`
     })

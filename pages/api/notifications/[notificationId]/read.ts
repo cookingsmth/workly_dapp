@@ -1,4 +1,3 @@
-// pages/api/notifications/[notificationId]/read.ts
 import { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
@@ -73,7 +72,7 @@ const verifyToken = (token: string) => {
   }
 }
 
-const getUserFromToken = (authHeader: string) => {
+const getUserFromToken = (authHeader: string | undefined) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }
@@ -110,7 +109,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
   }
 
-  // Проверяем аутентификацию
   const currentUser = getUserFromToken(req.headers.authorization)
   
   if (!currentUser) {
@@ -122,7 +120,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (method === 'POST') {
     try {
-      // Отмечаем уведомление как прочитанное
       const notifications = loadNotifications()
       const notificationIndex = notifications.findIndex(
         notif => notif.id === notificationId && notif.userId === currentUser.id

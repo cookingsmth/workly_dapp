@@ -4,7 +4,6 @@ import fs from 'fs'
 import path from 'path'
 import jwt from 'jsonwebtoken'
 
-// Функции для работы с файлами
 const getApplicationsFilePath = () => path.join(process.cwd(), 'data', 'applications.json')
 const getTasksFilePath = () => path.join(process.cwd(), 'data', 'tasks.json')
 
@@ -62,7 +61,6 @@ const saveTasks = (tasks: any[]) => {
   fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2))
 }
 
-// Проверка токена
 const verifyToken = (token: string) => {
   try {
     const decoded = jwt.verify(
@@ -75,7 +73,7 @@ const verifyToken = (token: string) => {
   }
 }
 
-const getUserFromToken = (authHeader: string) => {
+const getUserFromToken = (authHeader: string | undefined) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }
@@ -118,7 +116,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (method === 'PATCH') {
     try {
-      // Проверяем аутентификацию
       const user = getUserFromToken(req.headers.authorization)
       
       if (!user) {
@@ -130,7 +127,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const { status } = req.body
 
-      // Проверяем что статус валидный
       if (!status || !['accepted', 'rejected'].includes(status)) {
         return res.status(400).json({
           error: 'Bad Request',
@@ -138,7 +134,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       }
 
-      // Загружаем заявки
       const applications = loadApplications()
       const applicationIndex = applications.findIndex((app: any) => app.id === id)
 
@@ -151,7 +146,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const application = applications[applicationIndex]
 
-      // Загружаем задачи для проверки прав
       const tasks = loadTasks()
       const task = tasks.find((t: any) => t.id === application.taskId)
 
@@ -162,7 +156,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       }
 
-      // Проверяем что пользователь - создатель задачи
       if (task.createdBy !== user.id) {
         return res.status(403).json({
           error: 'Forbidden',
@@ -170,7 +163,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       }
 
-      // Проверяем что заявка еще в статусе pending
       if (application.status !== 'pending') {
         return res.status(400).json({
           error: 'Bad Request',
@@ -178,14 +170,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
       }
 
-      // Обновляем статус заявки
       applications[applicationIndex] = {
         ...application,
         status,
         updatedAt: new Date().toISOString()
       }
 
-      // Если заявка принята, обновляем задачу
       if (status === 'accepted') {
         const taskIndex = tasks.findIndex((t: any) => t.id === task.id)
         if (taskIndex !== -1) {
@@ -198,7 +188,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
           saveTasks(tasks)
 
-          // Отклоняем все остальные заявки для этой задачи
           for (let i = 0; i < applications.length; i++) {
             if (applications[i].taskId === task.id && 
                 applications[i].id !== id && 
@@ -213,15 +202,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }
 
-      // Сохраняем изменения
       saveApplications(applications)
 
       res.status(200).json({
         success: true,
         message: `Application ${status} successfully`,
         application: applications[applicationIndex],
-        task: status === 'accepted' ? tasks.find(t => t.id === task.id) : undefined
-      })
+        task: status === 'accepted' ? tasks.find((t: { id: string }) => t.id === task.id)})
 
     } catch (error) {
       console.error('Update application status error:', error)

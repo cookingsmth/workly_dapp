@@ -1,4 +1,4 @@
-// pages/api/notifications/mark-all-read.ts
+
 import { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
@@ -73,7 +73,7 @@ const verifyToken = (token: string) => {
   }
 }
 
-const getUserFromToken = (authHeader: string) => {
+const getUserFromToken = (authHeader: string | undefined) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null
   }
@@ -102,7 +102,6 @@ const getUserFromToken = (authHeader: string) => {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req
 
-  // Проверяем аутентификацию
   const currentUser = getUserFromToken(req.headers.authorization)
   
   if (!currentUser) {
@@ -114,7 +113,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (method === 'POST') {
     try {
-      // Отмечаем все уведомления пользователя как прочитанные
       const notifications = loadNotifications()
       let updatedCount = 0
 
