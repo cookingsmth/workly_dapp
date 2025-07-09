@@ -9,11 +9,11 @@ const getTasksFilePath = () => path.join(process.cwd(), 'data', 'tasks.json')
 
 const loadApplications = () => {
   const filePath = getApplicationsFilePath()
-  
+
   if (!fs.existsSync(filePath)) {
     return []
   }
-  
+
   try {
     const data = fs.readFileSync(filePath, 'utf8')
     return JSON.parse(data)
@@ -26,21 +26,21 @@ const loadApplications = () => {
 const saveApplications = (applications: any[]) => {
   const filePath = getApplicationsFilePath()
   const dir = path.dirname(filePath)
-  
+
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
   }
-  
+
   fs.writeFileSync(filePath, JSON.stringify(applications, null, 2))
 }
 
 const loadTasks = () => {
   const filePath = getTasksFilePath()
-  
+
   if (!fs.existsSync(filePath)) {
     return []
   }
-  
+
   try {
     const data = fs.readFileSync(filePath, 'utf8')
     return JSON.parse(data)
@@ -53,18 +53,18 @@ const loadTasks = () => {
 const saveTasks = (tasks: any[]) => {
   const filePath = getTasksFilePath()
   const dir = path.dirname(filePath)
-  
+
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
   }
-  
+
   fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2))
 }
 
 const verifyToken = (token: string) => {
   try {
     const decoded = jwt.verify(
-      token, 
+      token,
       process.env.JWT_SECRET || 'workly-local-secret-key-2025'
     ) as { userId: string }
     return decoded
@@ -80,7 +80,7 @@ const getUserFromToken = (authHeader: string | undefined) => {
 
   const token = authHeader.split(' ')[1]
   const decoded = verifyToken(token)
-  
+
   if (!decoded) return null
 
   try {
@@ -90,7 +90,7 @@ const getUserFromToken = (authHeader: string | undefined) => {
     const usersData = fs.readFileSync(usersFilePath, 'utf8')
     const users = JSON.parse(usersData)
     const user = users.find((u: any) => u.id === decoded.userId)
-    
+
     if (!user) return null
 
     return {
@@ -117,7 +117,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (method === 'PATCH') {
     try {
       const user = getUserFromToken(req.headers.authorization)
-      
+
       if (!user) {
         return res.status(401).json({
           error: 'Unauthorized',
@@ -189,9 +189,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           saveTasks(tasks)
 
           for (let i = 0; i < applications.length; i++) {
-            if (applications[i].taskId === task.id && 
-                applications[i].id !== id && 
-                applications[i].status === 'pending') {
+            if (applications[i].taskId === task.id &&
+              applications[i].id !== id &&
+              applications[i].status === 'pending') {
               applications[i] = {
                 ...applications[i],
                 status: 'rejected',
@@ -208,7 +208,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         success: true,
         message: `Application ${status} successfully`,
         application: applications[applicationIndex],
-        task: status === 'accepted' ? tasks.find((t: { id: string }) => t.id === task.id)})
+        task: status === 'accepted' ? tasks.find((t: { id: string }) => t.id === task.id) : null
+      })
 
     } catch (error) {
       console.error('Update application status error:', error)

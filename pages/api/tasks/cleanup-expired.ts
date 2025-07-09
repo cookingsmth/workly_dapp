@@ -1,10 +1,8 @@
-// pages/api/tasks/cleanup-expired.ts - Утилита для принудительной очистки просроченных задач
 import { NextApiRequest, NextApiResponse } from 'next'
 import jwt from 'jsonwebtoken'
 import fs from 'fs'
 import path from 'path'
 
-// Пути к файлам данных
 const getTasksFilePath = () => path.join(process.cwd(), 'data', 'tasks.json')
 const getUsersFilePath = () => path.join(process.cwd(), 'data', 'users.json')
 const getEscrowAccountsFilePath = () => path.join(process.cwd(), 'data', 'escrow_accounts.json')
@@ -12,7 +10,6 @@ const getPendingEscrowsFilePath = () => path.join(process.cwd(), 'data', 'pendin
 const getWalletTransactionsFilePath = () => path.join(process.cwd(), 'data', 'wallet_transactions.json')
 const getWalletsFilePath = () => path.join(process.cwd(), 'data', 'wallets.json')
 
-// Создаем папку data если её нет
 const ensureDataDir = () => {
     const dataDir = path.join(process.cwd(), 'data')
     if (!fs.existsSync(dataDir)) {
@@ -20,7 +17,6 @@ const ensureDataDir = () => {
     }
 }
 
-// Функции для работы с файлами
 const loadTasks = () => {
     ensureDataDir()
     const filePath = getTasksFilePath()
@@ -153,7 +149,6 @@ const loadUsers = () => {
     }
 }
 
-// 🎯 ФУНКЦИЯ ВОЗВРАТА ДЕНЕГ С ESCROW
 const refundMoneyFromEscrow = async (taskId: string, clientId: string) => {
     try {
         console.log(`💰 Starting refund process for task ${taskId}`)
@@ -163,12 +158,11 @@ const refundMoneyFromEscrow = async (taskId: string, clientId: string) => {
         let wallets = loadWallets()
         let transactions = loadWalletTransactions()
         
-        // Найти escrow для данной задачи
-        const escrowIndex = escrowAccounts.findIndex(escrow => 
+        const escrowIndex = escrowAccounts.findIndex((escrow: any) => 
             escrow.taskId === taskId && escrow.status === 'funded'
         )
         
-        const pendingIndex = pendingEscrows.findIndex(escrow => 
+        const pendingIndex = pendingEscrows.findIndex((escrow: any) => 
             escrow.taskId === taskId || (escrow.taskData && escrow.taskData.createdBy === clientId)
         )
         
@@ -176,7 +170,6 @@ const refundMoneyFromEscrow = async (taskId: string, clientId: string) => {
         let refundToken = ''
         let escrowToRemove = null
         
-        // Обработка активного escrow (со статусом 'funded')
         if (escrowIndex !== -1) {
             const escrow = escrowAccounts[escrowIndex]
             refundAmount = escrow.amount
@@ -185,11 +178,9 @@ const refundMoneyFromEscrow = async (taskId: string, clientId: string) => {
             
             console.log(`💸 Found funded escrow: ${refundAmount} ${refundToken}`)
             
-            // Удаляем escrow из активных
             escrowAccounts.splice(escrowIndex, 1)
             saveEscrowAccounts(escrowAccounts)
         }
-        // Обработка ожидающего escrow (pending_payment)
         else if (pendingIndex !== -1) {
             const pendingEscrow = pendingEscrows[pendingIndex]
             refundAmount = pendingEscrow.amount || pendingEscrow.taskData?.reward?.amount || 0
@@ -198,20 +189,16 @@ const refundMoneyFromEscrow = async (taskId: string, clientId: string) => {
             
             console.log(`⏳ Found pending escrow: ${refundAmount} ${refundToken}`)
             
-            // Удаляем из pending
             pendingEscrows.splice(pendingIndex, 1)
             savePendingEscrows(pendingEscrows)
         }
         
-        // Если найден escrow для возврата
         if (escrowToRemove && refundAmount > 0) {
-            // Находим кошелек пользователя
-            const walletIndex = wallets.findIndex(wallet => wallet.userId === clientId)
+            const walletIndex = wallets.findIndex((wallet: any) => wallet.userId === clientId)
             
             if (walletIndex !== -1) {
                 const wallet = wallets[walletIndex]
                 
-                // Возвращаем деньги на баланс пользователя
                 switch (refundToken.toUpperCase()) {
                     case 'SOL':
                         wallet.solBalance += refundAmount
@@ -233,8 +220,7 @@ const refundMoneyFromEscrow = async (taskId: string, clientId: string) => {
                 wallet.lastUpdated = new Date().toISOString()
                 saveWallets(wallets)
                 
-                // Записываем транзакцию возврата
-                const refundTransaction = {
+               const refundTransaction = {
                     id: Date.now().toString(),
                     type: 'task_refund_expired',
                     userId: clientId,
@@ -265,13 +251,12 @@ const refundMoneyFromEscrow = async (taskId: string, clientId: string) => {
             return { success: true, refundAmount: 0, refundToken: 'NONE' }
         }
         
-    } catch (error) {
+    } catch (error: any) {
         console.error('❌ Error during refund process:', error)
         return { success: false, error: error.message }
     }
 }
 
-// Проверка токена и получение пользователя (для admin проверки)
 const getUserFromToken = (authHeader: string | undefined) => {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return null
@@ -309,13 +294,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        // Можно добавить проверку admin прав если нужно
-        // const user = getUserFromToken(req.headers.authorization)
-        // if (!user || user.role !== 'admin') { ... }
 
         console.log('🧹 Starting manual cleanup of expired tasks...')
 
-        // Загружаем все задачи
         const tasks = loadTasks()
         const now = new Date()
         
@@ -325,11 +306,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const tasksToKeep = []
 
         for (const task of tasks) {
-            // Если задача открыта, но дедлайн прошел
             if (task.status === 'open' && new Date(task.deadline) <= now) {
                 console.log(`🕒 Processing expired task ${task.id} (deadline: ${task.deadline})`)
                 
-                // Пытаемся вернуть деньги
                 const refundResult = await refundMoneyFromEscrow(task.id, task.createdBy)
                 
                 if (refundResult.success) {
@@ -352,8 +331,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     
                     console.log(`✅ Task ${task.id} processed successfully`)
                 } else {
-                    // Если возврат не удался, все равно удаляем задачу, но логируем ошибку
-                    errors.push({
+                   errors.push({
                         taskId: task.id,
                         error: refundResult.error || 'Unknown refund error'
                     })
@@ -370,18 +348,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     console.warn(`⚠️ Task ${task.id} deleted but refund failed: ${refundResult.error}`)
                 }
             } else {
-                // Задача остается
                 tasksToKeep.push(task)
             }
         }
 
-        // Сохраняем обновленный список задач
         if (deletedTasks.length > 0) {
             saveTasks(tasksToKeep)
             console.log(`🗑️ Cleanup completed: ${deletedTasks.length} expired tasks deleted`)
         }
 
-        // Формируем ответ
         const response = {
             success: true,
             message: `Cleanup completed: ${deletedTasks.length} expired tasks processed`,

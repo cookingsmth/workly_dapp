@@ -1,4 +1,3 @@
-// pages/profile.tsx
 import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import ProfileWidget from '../components/ProfileWidget'
@@ -62,6 +61,7 @@ interface Task {
   }
   deadline: string
   createdAt: string
+  createdBy?: string
   applicationCount?: number
   isUrgent?: boolean
   tags?: string[]
@@ -81,10 +81,11 @@ interface AcceptedTask {
   clientName: string
   clientId: string
   taskId: string
+  createdBy?: string
 }
 
 export default function ProfilePage() {
-  const { user, loading } = useAuth()
+  const { user, isLoading: loading } = useAuth()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [stats, setStats] = useState<ProjectStats | null>(null)
   const [createdTasks, setCreatedTasks] = useState<Task[]>([])
@@ -150,7 +151,6 @@ export default function ProfilePage() {
     }
   }, [editingProject])
 
-
   const loadProfile = async () => {
     try {
       const response = await fetch('/api/profile', {
@@ -171,7 +171,6 @@ export default function ProfilePage() {
 
   const loadStats = async () => {
     try {
-      // Используем существующий API tasks для подсчета статистики
       const response = await fetch('/api/tasks', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -180,21 +179,20 @@ export default function ProfilePage() {
 
       if (response.ok) {
         const data = await response.json()
-        const userTasks = data.tasks.filter(task => task.createdBy === user?.id)
-        const acceptedTasks = data.tasks.filter(task =>
+        const userTasks = data.tasks.filter((task: any) => task.createdBy === user?.id)
+        const acceptedTasks = data.tasks.filter((task: any) =>
           task.assignedTo === user?.id ||
-          task.applications?.some(app => app.applicantId === user?.id && app.status === 'accepted')
+          task.applications?.some((app: any) => app.applicantId === user?.id && app.status === 'accepted')
         )
 
-        // Подсчитываем статистику
         const stats = {
           total: acceptedTasks.length,
-          completed: acceptedTasks.filter(task => task.status === 'completed').length,
-          inProgress: acceptedTasks.filter(task => task.status === 'in_progress').length,
+          completed: acceptedTasks.filter((task: any) => task.status === 'completed').length,
+          inProgress: acceptedTasks.filter((task: any) => task.status === 'in_progress').length,
           rating: profile?.rating || 0,
           totalEarnings: acceptedTasks
-            .filter(task => task.status === 'completed')
-            .reduce((sum, task) => sum + (task.reward?.amount || 0), 0)
+            .filter((task: any) => task.status === 'completed')
+            .reduce((sum: number, task: any) => sum + (task.reward?.amount || 0), 0)
         }
 
         setStats(stats)
@@ -214,8 +212,7 @@ export default function ProfilePage() {
 
       if (response.ok) {
         const data = await response.json()
-        // Фильтруем только задания текущего пользователя
-        const userTasks = data.tasks.filter(task => task.createdBy === user?.id)
+        const userTasks = data.tasks.filter((task: any) => task.createdBy === user?.id)
         setCreatedTasks(userTasks)
       }
     } catch (error) {
@@ -233,10 +230,9 @@ export default function ProfilePage() {
 
       if (response.ok) {
         const data = await response.json()
-        // Фильтруем задания где пользователь исполнитель
-        const acceptedTasks = data.tasks.filter(task =>
+        const acceptedTasks = data.tasks.filter((task: any) =>
           task.assignedTo === user?.id ||
-          task.applications?.some(app => app.applicantId === user?.id && app.status === 'accepted')
+          task.applications?.some((app: any) => app.applicantId === user?.id && app.status === 'accepted')
         )
         setAcceptedTasks(acceptedTasks)
       }
@@ -244,6 +240,7 @@ export default function ProfilePage() {
       console.error('Error loading accepted tasks:', error)
     }
   }
+
   const loadPortfolioProjects = async () => {
     try {
       const response = await fetch('/api/portfolio', {
@@ -340,6 +337,7 @@ export default function ProfilePage() {
       technologies: prev.technologies.filter(tech => tech !== techToRemove)
     }))
   }
+  
   const saveProfile = async () => {
     setSaving(true)
     try {

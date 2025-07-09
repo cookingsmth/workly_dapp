@@ -25,7 +25,6 @@ export default function TasksPage() {
     const router = useRouter()
     const { user, isAuthenticated } = useAuth()
 
-    // Store methods
     const {
         tasks,
         loading,
@@ -38,24 +37,20 @@ export default function TasksPage() {
         clearError
     } = useTaskStore()
 
-    // Local state
     const [activeFilter, setActiveFilter] = useState<'all' | TaskStatus>('all')
     const [isApplyOpen, setIsApplyOpen] = useState(false)
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [selectedTask, setSelectedTask] = useState<any>(null)
     const [searchQuery, setSearchQuery] = useState('')
 
-    // Загружаем задачи при монтировании
     useEffect(() => {
         fetchTasks()
     }, [fetchTasks])
 
-    // Обновляем фильтр поиска
     useEffect(() => {
         setFilters({ search: searchQuery })
     }, [searchQuery, setFilters])
 
-    // Обновляем фильтр статуса
     useEffect(() => {
         if (activeFilter === 'all') {
             setFilters({ status: undefined })
@@ -64,7 +59,6 @@ export default function TasksPage() {
         }
     }, [activeFilter, setFilters])
 
-    // Получаем отфильтрованные задачи
     const filteredTasks = useMemo(() => {
         return getFilteredTasks()
     }, [getFilteredTasks, tasks, filters])
@@ -92,7 +86,6 @@ export default function TasksPage() {
         if (newTask) {
             setIsCreateOpen(false)
         }
-        // Ошибка будет показана через error state из store
     }
 
     const handleCreateTaskClick = () => {
@@ -232,7 +225,7 @@ export default function TasksPage() {
                                                 Array.isArray(task.applicants) &&
                                                 task.applicants.includes(user?.id || '')
                                             }
-                                            user={user}
+                                            user={user || undefined}
                                         />
                                     </motion.div>
                                 ))

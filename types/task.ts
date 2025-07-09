@@ -1,4 +1,4 @@
-// types/task.ts
+
 export type TokenType = 'SOL' | 'USDT' | 'USDC'
 
 export interface TaskReward {
@@ -17,27 +17,27 @@ export interface Task {
   escrowAddress: string
   escrowSecret?: string
   
-  // Пользователи
-  createdBy: string        // ID создателя
-  assignedTo?: string      // ID исполнителя
-  client?: string          // Имя клиента для отображения
-  clientName?: string      // Альтернативное имя клиента
   
-  // Статус и временные метки
+  createdBy: string        
+  assignedTo?: string     
+  client?: string          
+  clientName?: string 
+  
+  
   status: TaskStatus
   createdAt: string
   updatedAt: string
   
-  // Заявки на выполнение
-  applicants: string[]     // Массив ID пользователей, подавших заявки
-  applicationCount?: number // Количество заявок
+
+  applicants: string[]     
+  applicationCount?: number 
   
-  // Дополнительные поля
-  tags?: string[]          // Теги задачи
-  attachments?: string[]   // Файлы-приложения
-  requirements?: string[]  // Требования к исполнителю
-  isUrgent?: boolean      // Срочная задача
-  viewCount?: number      // Количество просмотров
+ 
+  tags?: string[]
+  attachments?: string[]   
+  requirements?: string[] 
+  isUrgent?: boolean  
+  viewCount?: number  
 }
 
 export interface CreateTaskData {
@@ -57,8 +57,8 @@ export interface TaskApplication {
   applicantName: string
   message: string
   proposedPrice?: TaskReward
-  estimatedTime?: string   // "2 days", "1 week", etc.
-  portfolio?: string[]     // Ссылки на примеры работ
+  estimatedTime?: string 
+  portfolio?: string[]  
   createdAt: string
   status: 'pending' | 'accepted' | 'rejected'
 }
@@ -79,7 +79,7 @@ export interface TaskSort {
   direction: 'asc' | 'desc'
 }
 
-// Статистика пользователя
+
 export interface UserTaskStats {
   created: number
   completed: number
@@ -89,7 +89,7 @@ export interface UserTaskStats {
   completionRate: number
 }
 
-// События задачи для истории
+
 export interface TaskEvent {
   id: string
   taskId: string
@@ -101,7 +101,7 @@ export interface TaskEvent {
   metadata?: Record<string, any>
 }
 
-// Константы
+
 export const TASK_STATUSES: Record<TaskStatus, { label: string; color: string; icon: string }> = {
   open: { label: 'Open', color: 'green', icon: '🟢' },
   in_progress: { label: 'In Progress', color: 'blue', icon: '⚡' },

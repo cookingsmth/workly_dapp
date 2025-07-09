@@ -2,10 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/tasks": "pages/tasks.js",
-  "/api/wallet/info": "pages/api/wallet/info.js",
-  "/api/tasks": "pages/api/tasks.js",
   "/": "pages/index.js",
-  "/api/auth/me": "pages/api/auth/me.js",
+  "/wallet": "pages/wallet.js",
   "/profile": "pages/profile.js"
 }

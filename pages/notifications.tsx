@@ -16,7 +16,7 @@ interface Notification {
 }
 
 export default function NotificationsPage() {
-  const { user, loading } = useAuth()
+  const { user, isLoading } = useAuth()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [filter, setFilter] = useState<'all' | 'unread'>('all')
 
@@ -53,8 +53,8 @@ export default function NotificationsPage() {
       })
       
       if (response.ok) {
-        setNotifications(prev => 
-          prev.map(notif => 
+        setNotifications((prev: Notification[]) => 
+          prev.map((notif: Notification) => 
             notif.id === notificationId 
               ? { ...notif, read: true }
               : notif
@@ -76,8 +76,8 @@ export default function NotificationsPage() {
       })
       
       if (response.ok) {
-        setNotifications(prev => 
-          prev.map(notif => ({ ...notif, read: true }))
+        setNotifications((prev: Notification[]) => 
+          prev.map((notif: Notification) => ({ ...notif, read: true }))
         )
       }
     } catch (error) {
@@ -95,8 +95,8 @@ export default function NotificationsPage() {
       })
       
       if (response.ok) {
-        setNotifications(prev => 
-          prev.filter(notif => notif.id !== notificationId)
+        setNotifications((prev: Notification[]) => 
+          prev.filter((notif: Notification) => notif.id !== notificationId)
         )
       }
     } catch (error) {
@@ -133,11 +133,11 @@ export default function NotificationsPage() {
 
   const filteredNotifications = filter === 'all' 
     ? notifications 
-    : notifications.filter(notif => !notif.read)
+    : notifications.filter((notif: Notification) => !notif.read)
 
-  const unreadCount = notifications.filter(notif => !notif.read).length
+  const unreadCount = notifications.filter((notif: Notification) => !notif.read).length
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0b0f1a] via-[#1e2140] to-[#0d0d26]">
         <div className="text-white">Loading...</div>
@@ -224,7 +224,7 @@ export default function NotificationsPage() {
                 </p>
               </div>
             ) : (
-              filteredNotifications.map((notification, index) => (
+              filteredNotifications.map((notification: Notification, index: number) => (
                 <motion.div
                   key={notification.id}
                   initial={{ opacity: 0, y: 20 }}

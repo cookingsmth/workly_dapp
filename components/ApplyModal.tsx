@@ -118,7 +118,7 @@ export default function ApplyModal({
         setSuccess(true)
         setTimeout(() => {
           onClose()
-          window.location.reload() // Обновляем страницу чтобы показать изменения
+          window.location.reload()
         }, 2000)
       } else {
         setError(data.message || 'Failed to submit application')

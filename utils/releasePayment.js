@@ -1,4 +1,4 @@
-// utils/releasePayment.js
+
 export async function releasePayment(taskId, workerId) {
   try {
     const response = await fetch(`/api/tasks/${taskId}/complete`, {

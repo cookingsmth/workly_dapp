@@ -55,13 +55,13 @@ export default function SettingsPage() {
   // Check authentication
   useEffect(() => {
     const token = localStorage.getItem('token')
-    console.log('Token from localStorage:', token) // Отладка
+    console.log('Token from localStorage:', token)
     if (!token) {
-      console.log('No token found, redirecting to home') // Отладка
+      console.log('No token found, redirecting to home')
       router.push('/')
       return
     }
-    console.log('Token found, user authenticated') // Отладка
+    console.log('Token found, user authenticated') 
     setIsAuthenticated(true)
   }, [router])
 
@@ -72,26 +72,26 @@ export default function SettingsPage() {
     const fetchSettings = async () => {
       try {
         const token = localStorage.getItem('token')
-        console.log('Fetching settings with token:', token) // Отладка
+        console.log('Fetching settings with token:', token)
         const response = await fetch('/api/settings', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         })
 
-        console.log('Settings response status:', response.status) // Отладка
+        console.log('Settings response status:', response.status) 
 
         if (!response.ok) {
           const errorData = await response.json()
-          console.log('Settings error:', errorData) // Отладка
+          console.log('Settings error:', errorData)
           throw new Error(errorData.message || 'Failed to load settings')
         }
 
         const data = await response.json()
-        console.log('Settings data:', data) // Отладка
+        console.log('Settings data:', data)
         setSettings(data)
       } catch (err) {
-        console.error('Fetch settings error:', err) // Отладка
+        console.error('Fetch settings error:', err)
         setError(err instanceof Error ? err.message : 'Failed to load settings')
       } finally {
         setLoading(false)

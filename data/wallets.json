@@ -16,13 +16,13 @@
     "userId": "1750268427941",
     "publicKey": "EqFcaGSSmEZQpQvAiRm1vtGNMW7kYgad2JxkSP5Ubzpy",
     "privateKey": "MnBqcXdMZ2RVeXhocG1tWnJ1WERFN2I5dzdIdUo5OW41MUNaUkg0TTdrZ0pLRDg3eFN3NUpYWlA0YnRobzJUcXVUYTZ0Njl1OW16c0ZCejdrQmhiQ05vag==",
-    "solBalance": 0.4750000000000001,
+    "solBalance": 0.474985,
     "usdtBalance": 0,
     "usdcBalance": 0,
     "worklyBalance": 0.00975,
     "totalEarned": 0.975,
     "totalSpent": 0,
     "createdAt": "2025-06-23T22:37:37.199Z",
-    "lastUpdated": "2025-06-30T06:22:42.381Z"
+    "lastUpdated": "2025-07-09T16:11:30.002Z"
   }
 ]

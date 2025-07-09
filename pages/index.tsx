@@ -4,14 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRef, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import type { VantaEffect } from 'vanta/types'
 import TrustSecuritySection from '../components/TrustSecuritySection'
 import FeeCalculator from '../components/FeeCalculator'
 import TestimonialsSection from '../components/TestimonialsSection'
 import TwitterButton from '../components/TwitterButton'
 import { motion, AnimatePresence } from 'framer-motion'
 
-// Импорты компонентов
 import { RegisterModal } from '../components/RegisterModal'
 import { LoginModal } from '../components/LoginModal'
 import { PrivacyModal } from '../components/PrivacyModal'
@@ -19,16 +17,24 @@ import { TermsModal } from '../components/TermsModal'
 import { HowItWorksModal } from '../components/HowItWorksModal'
 import ApplyModal from '../components/ApplyModal'
 
-// Импорт хука
 import { useAuth } from '../hooks/useAuth'
+
+interface Particle {
+  x: number
+  y: number
+  size: number
+  speedX: number
+  speedY: number
+  opacity: number
+  baseOpacity: number
+  pulseSpeed: number
+}
 
 export default function Home() {
   const router = useRouter()
 
-  // Используем useAuth вместо локального состояния
   const { user, isLoading, logout } = useAuth()
 
-  // Состояние модалов
   const [modals, setModals] = useState({
     register: false,
     login: false,
@@ -41,10 +47,9 @@ export default function Home() {
   const [currentTask, setCurrentTask] = useState("")
   const [vantaEffect, setVantaEffect] = useState<any>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const vantaRef = useRef(null)
+  const vantaRef = useRef<HTMLDivElement>(null)
   const [isApplied, setIsApplied] = useState(false)
 
-  // Функции для управления модалами
   const openModal = (modalName: keyof typeof modals) => {
     setModals(prev => ({ ...prev, [modalName]: true }))
   }
@@ -55,22 +60,21 @@ export default function Home() {
 
   const handleLogout = () => {
     logout()
-    // Можно добавить уведомление об успешном выходе
   }
 
-  // Enhanced Vanta.js setup with continuous animation
   useEffect(() => {
-    let vantaInstance: VantaEffect | null = null
+    let vantaInstance: any = null
     let animationFrame: number | null = null
 
     const loadVanta = async () => {
       try {
         const THREE = await import('three')
+        // @ts-ignore
         const VANTA = await import('vanta/dist/vanta.net.min')
 
         if (!vantaRef.current) return
 
-        vantaInstance = VANTA.default({
+        vantaInstance = (VANTA as any).default({
           el: vantaRef.current,
           THREE,
           mouseControls: true,
@@ -90,7 +94,6 @@ export default function Home() {
 
         setVantaEffect(vantaInstance)
 
-        // Непрерывная анимация параметров Vanta
         const animateVanta = () => {
           if (vantaInstance && vantaInstance.setOptions) {
             const time = Date.now() * 0.001
@@ -120,6 +123,8 @@ export default function Home() {
 
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
+      if (!ctx) return
+
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
       canvas.style.position = 'absolute'
@@ -128,11 +133,11 @@ export default function Home() {
       canvas.style.zIndex = '1'
       canvas.style.pointerEvents = 'none'
 
-      vantaRef.current.appendChild(canvas)
+      if (vantaRef.current) {
+        vantaRef.current.appendChild(canvas)
+      }
 
-      // Создаем частицы с непрерывной анимацией
-      const particles = []
-      const connections = []
+      const particles: Particle[] = []
 
       for (let i = 0; i < 50; i++) {
         particles.push({
@@ -147,29 +152,23 @@ export default function Home() {
         })
       }
 
-      const animate = (ctx, time) => {
+      const animate = (time: number) => {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-        // Обновляем частицы
         particles.forEach((particle, index) => {
-          // Движение
           particle.x += particle.speedX
           particle.y += particle.speedY
 
-          // Отскок от границ
           if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1
           if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1
 
-          // Пульсация
           particle.opacity = particle.baseOpacity + Math.sin(time * particle.pulseSpeed) * 0.3
 
-          // Рисуем частицу
           ctx.beginPath()
           ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
           ctx.fillStyle = `rgba(147, 51, 234, ${Math.max(0, particle.opacity)})`
           ctx.fill()
 
-          // Рисуем связи между близкими частицами
           particles.forEach((otherParticle, otherIndex) => {
             if (index !== otherIndex) {
               const dx = particle.x - otherParticle.x
@@ -195,19 +194,24 @@ export default function Home() {
       animate(0)
     }
 
+    loadVanta()
+
     return () => {
       if (vantaInstance) {
-        vantaInstance.destroy()
+        try {
+          vantaInstance.destroy()
+        } catch (error) {
+          console.log('Error destroying Vanta:', error)
+        }
       }
       if (animationFrame) {
         cancelAnimationFrame(animationFrame)
       }
     }
-  }, [vantaEffect])
+  }, [])
 
-  // Mouse tracking для дополнительных эффектов (не влияет на основную анимацию)
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
 
@@ -227,7 +231,6 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize)
   }, [vantaEffect])
 
-  // Показываем загрузку пока проверяем авторизацию
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0b0f1a] via-[#1e2140] to-[#0d0d26] flex items-center justify-center relative overflow-hidden">
@@ -290,10 +293,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#0b0f1a]/20 via-transparent to-[#0b0f1a]/20 pointer-events-none z-5"></div>
 
         {/* Enhanced Header */}
-        {/* Adaptive Header */}
-        {/* Adaptive Header */}
         {!user ? (
-          // Оригинальный хедер (как был до изменений)
           <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex justify-between items-center w-[95%] max-w-[1200px] px-8 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
             <div className="flex items-center gap-3">
               <div className="relative">
@@ -329,11 +329,9 @@ export default function Home() {
             </nav>
           </header>
         ) : (
-          // Компактный хедер после логина - только логотип по центру
           <header className="fixed top-4 left-1/2 -translate-x-1/2 z-40">
             <div className="group flex items-center gap-4 px-6 py-3 bg-white/8 backdrop-blur-xl border border-white/20 rounded-full shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 hover:scale-105 hover:bg-white/12">
 
-              {/* Логотип и название */}
               <Link href="/" className="flex items-center gap-3">
                 <div className="relative">
                   <img
@@ -349,12 +347,9 @@ export default function Home() {
                 </h1>
               </Link>
 
-              {/* Разделитель */}
               <div className="w-px h-6 bg-white/20"></div>
 
-              {/* Информация о пользователе */}
               <div className="flex items-center gap-3">
-                {/* Аватар пользователя */}
                 <div className="relative">
                   <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
                     {user?.username?.[0]?.toUpperCase()}
@@ -362,7 +357,6 @@ export default function Home() {
                   <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900 animate-pulse"></div>
                 </div>
 
-                {/* Имя пользователя */}
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold text-white">
                     {user?.username}
@@ -371,7 +365,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Декоративные элементы */}
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-purple-600/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
           </header>
@@ -435,7 +428,6 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
 
-                {/* Декоративный элемент */}
                 <div className="flex items-center gap-1">
                   <div className="w-1 h-1 bg-purple-400 rounded-full animate-pulse"></div>
                   <div className="w-1 h-1 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
@@ -610,7 +602,6 @@ export default function Home() {
         </footer>
       </div>
 
-      {/* Модальные окна */}
       <RegisterModal
         isOpen={modals.register}
         onClose={() => closeModal('register')}
@@ -641,6 +632,7 @@ export default function Home() {
           isOpen={modals.apply}
           onClose={() => closeModal('apply')}
           taskTitle={currentTask}
+          taskId={currentTask}
         />
       )}
 

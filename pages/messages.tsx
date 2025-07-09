@@ -22,8 +22,14 @@ interface ChatPreview {
   lastActivity: string
 }
 
+interface User {
+  id: string
+  username: string
+  email?: string
+}
+
 export default function MessagesPage() {
-  const { user, loading } = useAuth()
+  const { user, isLoading } = useAuth()
   const [chats, setChats] = useState<ChatPreview[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [loadingChats, setLoadingChats] = useState(true)
@@ -54,7 +60,7 @@ export default function MessagesPage() {
     }
   }
 
-  const filteredChats = chats.filter(chat =>
+  const filteredChats = chats.filter((chat: ChatPreview) =>
     chat.participantName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     chat.taskTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (chat.lastMessage?.text || '').toLowerCase().includes(searchQuery.toLowerCase())
@@ -81,7 +87,7 @@ export default function MessagesPage() {
     return text.substring(0, maxLength) + '...'
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0b0f1a] via-[#1e2140] to-[#0d0d26]">
         <div className="text-white">Loading...</div>
@@ -101,7 +107,7 @@ export default function MessagesPage() {
         
     <div className="min-h-screen bg-gradient-to-b from-[#0b0f1a] via-[#1e2140] to-[#0d0d26] flex flex-col">
       <Head>
-        <title>Workly - My Wallet</title>
+        <title>Workly - Messages</title>
         <link rel="icon" href="/workly.png" sizes="64x64" type="image/png" />
         <meta name="description" content="Web3 platform for tasks with payment in Solana. Post simple tasks and get them done quickly, with payments guaranteed by smart contracts." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -156,7 +162,7 @@ export default function MessagesPage() {
                 )}
               </div>
             ) : (
-              filteredChats.map((chat, index) => (
+              filteredChats.map((chat: ChatPreview, index: number) => (
                 <motion.div
                   key={chat.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -196,7 +202,7 @@ export default function MessagesPage() {
                             
                             {chat.lastMessage ? (
                               <p className="text-white/40 text-sm truncate">
-                                {chat.lastMessage.senderId === user.id ? 'You: ' : ''}
+                                {chat.lastMessage.senderId === (user as User).id ? 'You: ' : ''}
                                 {truncateMessage(chat.lastMessage.text)}
                               </p>
                             ) : (

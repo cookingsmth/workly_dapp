@@ -4,38 +4,42 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useTaskStore } from '../../../stores/taskStore'
 
+interface Task {
+  id: string | number
+  status?: 'accepted' | 'submitted' | 'open' | string
+}
+
 export default function WaitingPage() {
   const router = useRouter()
   const { id } = router.query
   const { tasks } = useTaskStore()
-  const task = tasks.find(t => t.id === id)
-  const [vantaEffect, setVantaEffect] = useState(null)
+  const task = tasks.find((t: Task) => t.id === id)
+  const [vantaEffect, setVantaEffect] = useState<any>(null)
   const [progress, setProgress] = useState(0)
   const [mounted, setMounted] = useState(false)
-  const vantaRef = useRef(null)
-  const taskStatus = task?.status
-  const taskId = task?.id
+  const vantaRef = useRef<HTMLDivElement>(null)
+  const taskStatus = (task as Task)?.status
+  const taskId = (task as Task)?.id
 
-  // Исправляем hydration mismatch
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Vanta.js Effect
   useEffect(() => {
     if (!mounted) return
 
-    let vantaInstance = null
-    let animationId = null
+    let vantaInstance: any = null
+    let animationId: number | null = null
 
     const loadVanta = async () => {
       try {
         const THREE = await import('three')
+        // @ts-ignore
         const VANTA = await import('vanta/dist/vanta.rings.min')
 
         if (!vantaRef.current) return
 
-        vantaInstance = VANTA.default({
+        vantaInstance = (VANTA as any).default({
           el: vantaRef.current,
           THREE,
           mouseControls: true,
@@ -54,7 +58,6 @@ export default function WaitingPage() {
 
         setVantaEffect(vantaInstance)
 
-        // Animate parameters
         const animateVanta = () => {
           if (vantaInstance && vantaInstance.setOptions) {
             const time = Date.now() * 0.001
@@ -75,11 +78,12 @@ export default function WaitingPage() {
         console.log('Vanta rings failed, trying cells:', error)
 
         try {
+          // @ts-ignore
           const VANTA_CELLS = await import('vanta/dist/vanta.cells.min')
 
-          vantaInstance = VANTA_CELLS.default({
+          vantaInstance = (VANTA_CELLS as any).default({
             el: vantaRef.current,
-            THREE,
+            THREE: await import('three'),
             mouseControls: true,
             touchControls: true,
             color1: 0x6366f1,
@@ -116,7 +120,6 @@ export default function WaitingPage() {
     }
   }, [mounted, taskStatus])
 
-  // Безопасный автоматический редирект через 3 секунды
   useEffect(() => {
     if (!mounted || !router.isReady) return
     if (!id || typeof id !== 'string' || id === 'undefined') return
@@ -131,16 +134,15 @@ export default function WaitingPage() {
     return () => clearTimeout(timeout)
   }, [mounted, router.isReady, id, router])
 
-  // Дополнительный редирект при изменении статуса task
   useEffect(() => {
     if (!mounted || !router.isReady) return
+    const taskStatus: 'accepted' | 'submitted' | 'open' | string | undefined = (task as Task)?.status
     if (typeof id === 'string' && id !== 'undefined' && taskStatus === 'accepted') {
       console.log('Task accepted, redirecting to chat immediately...')
       router.push(`/task/${id}/chat`)
     }
-  }, [mounted, router.isReady, id, taskStatus, router])
+  }, [mounted, router.isReady, id, taskStatus, router, task])
 
-  // Responsive Vanta
   useEffect(() => {
     if (!mounted) return
 
@@ -154,7 +156,6 @@ export default function WaitingPage() {
     return () => window.removeEventListener('resize', handleResize)
   }, [vantaEffect, mounted])
 
-  // Simulate progress
   useEffect(() => {
     const progressTimer = setInterval(() => {
       setProgress(prev => {
@@ -166,7 +167,7 @@ export default function WaitingPage() {
     return () => clearInterval(progressTimer)
   }, [])
 
-  const formatTime = (date) => {
+  const formatTime = (date: Date) => {
     if (!mounted || !date) return '--:--:--'
     return date.toLocaleTimeString('en-US', {
       hour12: false,
@@ -176,7 +177,6 @@ export default function WaitingPage() {
     })
   }
 
-  // Показываем loading пока не готово
   if (!mounted || !router.isReady) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white flex items-center justify-center">
@@ -194,7 +194,6 @@ export default function WaitingPage() {
         <title>Waiting for Approval — Workly</title>
       </Head>
 
-      {/* Vanta Background Container */}
       <div ref={vantaRef} className="min-h-screen text-white relative overflow-hidden">
 
         {/* Floating Elements */}

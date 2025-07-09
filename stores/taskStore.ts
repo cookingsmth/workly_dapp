@@ -1,56 +1,45 @@
-// stores/taskStore.ts - ИСПРАВЛЕННАЯ ВЕРСИЯ
 import { create } from 'zustand'
 import { Task, TaskApplication, TaskFilter, TaskSort, CreateTaskData, TaskStatus } from '../types/task'
 
 interface TaskStore {
-  // Состояние
   tasks: Task[]
   applications: TaskApplication[]
   loading: boolean
   error: string | null
   
-  // Фильтры и сортировка
   filters: TaskFilter
   sort: TaskSort
   
-  // API методы
   fetchTasks: () => Promise<void>
   createTask: (data: CreateTaskData) => Promise<Task | null>
   fetchTaskById: (id: string) => Promise<Task | null>
   updateTask: (id: string, updates: Partial<Task>) => Promise<boolean>
   deleteTask: (id: string) => Promise<boolean>
   
-  // Локальные методы (для быстрого UI)
   setTasks: (tasks: Task[]) => void
   addTask: (task: Task) => void
   updateTaskLocal: (id: string, updates: Partial<Task>) => void
   removeTask: (id: string) => void
   
-  // Заявки на задачи (пока локально, потом добавим API)
   applyToTask: (taskId: string, application: Omit<TaskApplication, 'id' | 'createdAt'>) => void
   getTaskApplications: (taskId: string) => TaskApplication[]
   
-  // Фильтрация и поиск
   setFilters: (filters: Partial<TaskFilter>) => void
   setSort: (sort: TaskSort) => void
   getFilteredTasks: () => Task[]
   
-  // Утилиты
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
   clearError: () => void
 }
 
-// Вспомогательная функция для получения токена (с проверкой SSR)
 const getToken = (): string | null => {
   if (typeof window === 'undefined') {
-    // Если выполняется на сервере - возвращаем null
     return null
   }
   return localStorage.getItem('token')
 }
 
-// Вспомогательная функция для API запросов
 const apiRequest = async (url: string, options: RequestInit = {}) => {
   const token = getToken()
   
@@ -70,10 +59,8 @@ const apiRequest = async (url: string, options: RequestInit = {}) => {
     },
   })
   
-  // Проверяем content-type перед парсингом
   const contentType = response.headers.get('content-type')
   if (!contentType || !contentType.includes('application/json')) {
-    // Если не JSON, читаем как текст для диагностики
     const text = await response.text()
     console.error('API returned non-JSON response:', text.substring(0, 200))
     throw new Error(`API endpoint returned HTML instead of JSON. Check if ${url} exists.`)
@@ -89,7 +76,6 @@ const apiRequest = async (url: string, options: RequestInit = {}) => {
 }
 
 export const useTaskStore = create<TaskStore>((set, get) => ({
-  // Начальное состояние
   tasks: [],
   applications: [],
   loading: false,
@@ -98,9 +84,7 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   filters: {},
   sort: { field: 'createdAt', direction: 'desc' },
   
-  // API методы
   fetchTasks: async () => {
-    // Пропускаем на сервере
     if (typeof window === 'undefined') return
     
     set({ loading: true, error: null })
@@ -118,7 +102,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   },
   
   createTask: async (taskData: CreateTaskData) => {
-    // Пропускаем на сервере
     if (typeof window === 'undefined') return null
     
     set({ loading: true, error: null })
@@ -131,7 +114,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       
       const newTask = data.task
       
-      // Добавляем в локальный стор для быстрого отображения
       set((state) => ({
         tasks: [newTask, ...state.tasks],
         loading: false
@@ -147,7 +129,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   },
   
   fetchTaskById: async (id: string) => {
-    // Пропускаем на сервере
     if (typeof window === 'undefined') return null
     
     set({ loading: true, error: null })
@@ -156,7 +137,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       const data = await apiRequest(`/api/tasks/${id}`)
       const task = data.task
       
-      // Обновляем в локальном сторе если задача уже есть
       set((state) => ({
         tasks: state.tasks.map(t => t.id === id ? task : t),
         loading: false
@@ -174,7 +154,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   },
   
   updateTask: async (id: string, updates: Partial<Task>) => {
-    // Пропускаем на сервере
     if (typeof window === 'undefined') return false
     
     set({ loading: true, error: null })
@@ -187,7 +166,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       
       const updatedTask = data.task
       
-      // Обновляем в локальном сторе
       set((state) => ({
         tasks: state.tasks.map(t => t.id === id ? updatedTask : t),
         loading: false
@@ -205,7 +183,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   },
   
   deleteTask: async (id: string) => {
-    // Пропускаем на сервере
     if (typeof window === 'undefined') return false
     
     set({ loading: true, error: null })
@@ -215,7 +192,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
         method: 'DELETE',
       })
       
-      // Удаляем из локального стора
       set((state) => ({
         tasks: state.tasks.filter(t => t.id !== id),
         loading: false
@@ -232,7 +208,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     }
   },
   
-  // Локальные методы (для быстрого UI)
   setTasks: (tasks) => set({ tasks }),
   
   addTask: (task) => set((state) => ({ 
@@ -251,7 +226,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     tasks: state.tasks.filter(task => task.id !== id)
   })),
   
-  // Заявки на задачи (пока локально)
   applyToTask: (taskId, applicationData) => {
     const application: TaskApplication = {
       ...applicationData,
@@ -279,7 +253,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     return get().applications.filter(app => app.taskId === taskId)
   },
   
-  // Фильтрация и сортировка
   setFilters: (filters) => set((state) => ({
     filters: { ...state.filters, ...filters }
   })),
@@ -290,7 +263,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     const { tasks, filters, sort } = get()
     let filtered = [...tasks]
     
-    // Применяем фильтры
     if (filters.status) {
       const statusArray = Array.isArray(filters.status) ? filters.status : [filters.status]
       filtered = filtered.filter(task => statusArray.includes(task.status))
@@ -331,7 +303,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       )
     }
     
-    // Применяем сортировку
     filtered.sort((a, b) => {
       let aValue: any, bValue: any
       
@@ -370,15 +341,12 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     return filtered
   },
   
-  // Утилиты
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
   clearError: () => set({ error: null }),
 }))
 
-// Хелперы для работы с задачами (без изменений)
 export const taskHelpers = {
-  // Проверка, может ли пользователь подать заявку на задачу
   canApplyToTask: (task: Task, userId: string): boolean => {
     return (
       task.status === 'open' &&
@@ -387,17 +355,14 @@ export const taskHelpers = {
     )
   },
   
-  // Проверка, является ли пользователь создателем задачи
   isTaskCreator: (task: Task, userId: string): boolean => {
     return task.createdBy === userId
   },
   
-  // Проверка, является ли пользователь исполнителем задачи
   isTaskAssignee: (task: Task, userId: string): boolean => {
     return task.assignedTo === userId
   },
   
-  // Получение цвета статуса
   getStatusColor: (status: TaskStatus): string => {
     const colors = {
       open: 'text-green-400',
@@ -410,7 +375,6 @@ export const taskHelpers = {
     return colors[status] || 'text-gray-400'
   },
   
-  // Форматирование времени до дедлайна
   getTimeUntilDeadline: (deadline: string): string => {
     const now = new Date()
     const deadlineDate = new Date(deadline)

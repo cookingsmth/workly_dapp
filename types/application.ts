@@ -1,4 +1,3 @@
-// types/application.ts
 export interface TaskApplication {
   id: string
   taskId: string

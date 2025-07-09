@@ -130,7 +130,7 @@ export default function WalletPage() {
 
       if (response.ok) {
         const data = await response.json()
-        await fetchWalletInfo() // Обновляем баланс
+        await fetchWalletInfo() 
         setWithdrawAmount('')
         setWithdrawAddress('')
         setIsWithdrawOpen(false)
@@ -230,10 +230,8 @@ export default function WalletPage() {
             disabled={refreshing}
             className="group relative overflow-hidden px-6 py-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 border border-blue-500/30 hover:border-blue-400/50 backdrop-blur-sm text-white rounded-xl font-medium transition-all duration-300 disabled:opacity-50 flex items-center gap-3 shadow-lg hover:shadow-xl hover:shadow-blue-500/25"
           >
-            {/* Анимированный блик */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
 
-            {/* Иконка с анимацией */}
             <div className={`relative z-10 transition-transform duration-300 ${refreshing ? 'animate-spin' : 'group-hover:rotate-180'}`}>
               {refreshing ? (
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24">
@@ -247,12 +245,10 @@ export default function WalletPage() {
               )}
             </div>
 
-            {/* Текст */}
             <span className="relative z-10 text-blue-100 group-hover:text-white transition-colors duration-300">
               {refreshing ? 'Refreshing...' : 'Refresh'}
             </span>
 
-            {/* Пульсирующая точка при обновлении */}
             {refreshing && (
               <div className="relative z-10 w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
             )}
@@ -334,20 +330,16 @@ export default function WalletPage() {
                   ))}
                 </div>
 
-                {/* Withdraw Button - только если есть SOL */}
                 <button
                   onClick={() => setIsWithdrawOpen(true)}
                   disabled={wallet.solBalance === 0}
                   className="group relative overflow-hidden w-full mt-4 px-6 py-4 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-cyan-500/20 hover:from-purple-500/30 hover:via-blue-500/30 hover:to-cyan-500/30 border border-purple-500/30 hover:border-purple-400/50 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-purple-500/25"
                 >
-                  {/* Анимированный градиентный блик */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
 
                   <div className="relative z-10 flex items-center justify-center gap-3">
-                    {/* SOL иконка */}
                     <img src="/solana.png" alt="SOL" className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
 
-                    {/* Стрелка вывода */}
                     <svg className="w-5 h-5 text-purple-300 group-hover:text-white group-hover:translate-x-1 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -405,7 +397,6 @@ export default function WalletPage() {
                     </div>
                   </div>
 
-                  {/* USD эквивалент мелким текстом */}
                   <div className="pt-2 space-y-1 text-xs text-gray-500">
                     <div className="flex justify-between">
                       <span>Earned:</span>

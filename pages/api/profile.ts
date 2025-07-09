@@ -292,13 +292,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const allProfiles = loadProfiles()
       const allSettings = loadSettings()
       
-      const userProfile = allProfiles.find(p => p.id === currentUser.id) || null
-      const userSettings = allSettings.find(s => s.id === currentUser.id) || null
+      const userProfile = allProfiles.find((p: UserProfile) => p.id === currentUser.id) || null
+      const userSettings = allSettings.find((s: any) => s.id === currentUser.id) || null
       
-      // Объединяем и возвращаем данные
       const mergedProfile = mergeProfileData(userProfile, userSettings, currentUser)
       
-      // Если профиля не было, сохраняем созданный по умолчанию
+    
       if (!userProfile) {
         allProfiles.push(mergedProfile)
         saveProfiles(allProfiles)
@@ -345,19 +344,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const allProfiles = loadProfiles()
       const allSettings = loadSettings()
       
-      const profileIndex = allProfiles.findIndex(p => p.id === currentUser.id)
-      const settingsIndex = allSettings.findIndex(s => s.id === currentUser.id)
+      const profileIndex = allProfiles.findIndex((p: UserProfile) => p.id === currentUser.id)
+      const settingsIndex = allSettings.findIndex((s: any) => s.id === currentUser.id)
       
       const now = new Date().toISOString()
       
-      // Получаем текущие данные
       const currentProfile = allProfiles[profileIndex] || null
       const currentSettings = allSettings[settingsIndex] || null
       
-      // Создаем обновленный профиль
       const updatedProfile = mergeProfileData(currentProfile, currentSettings, currentUser)
       
-      // Применяем обновления
       Object.keys(updates).forEach(key => {
         if (updates[key] !== undefined) {
           ;(updatedProfile as any)[key] = updates[key]
@@ -366,14 +362,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       
       updatedProfile.updatedAt = now
       
-      // Сохраняем в profiles
       if (profileIndex === -1) {
         allProfiles.push(updatedProfile)
       } else {
         allProfiles[profileIndex] = updatedProfile
       }
       
-      // Сохраняем в settings
       if (settingsIndex === -1) {
         allSettings.push(updatedProfile)
       } else {
@@ -383,7 +377,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       saveProfiles(allProfiles)
       saveSettings(allSettings)
       
-      // Обновляем username в users.json если изменился
       if (updates.username && updates.username !== currentUser.username) {
         const users = loadUsers()
         const userIndex = users.findIndex((u: any) => u.id === currentUser.id)

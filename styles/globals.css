@@ -2,21 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* === Переменные === */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --success-gradient: linear-gradient(135deg, #34d399 0%, #10b981 100%);
   --danger-gradient: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
 }
 
-/* === Базовые стили === */
 body {
   background-color: #111827; /* bg-gray-900 */
   color: #fff;                /* text-white */
   overflow-x: hidden;
 }
 
-/* === Компонентные и утилитные классы === */
 @layer components {
   .modal-backdrop {
     @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-40;
@@ -187,7 +184,6 @@ body {
   }
 }
 
-/* Мобильная адаптация */
 @media (max-width: 768px) {
   .glass-morphism {
     background-color: rgba(255, 255, 255, 0.08);

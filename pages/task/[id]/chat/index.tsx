@@ -13,11 +13,20 @@ interface Message {
   status: 'sent' | 'delivered' | 'read'
 }
 
+interface Task {
+  id: string | number
+  title?: string
+  name?: string
+  client?: string
+  clientName?: string
+  status?: 'accepted' | 'in_progress' | 'completed' | 'open' | string
+}
+
 export default function ChatPage() {
   const router = useRouter()
   const { id } = router.query
   const { tasks } = useTaskStore()
-  const task = tasks.find(t => t.id === id)
+  const task = tasks.find((t: Task) => t.id === id)
 
   const [mounted, setMounted] = useState<boolean>(false)
   const [messages, setMessages] = useState<Message[]>([])
@@ -26,21 +35,18 @@ export default function ChatPage() {
   const [isOnline, setIsOnline] = useState<boolean>(true)
   const [lastSeen, setLastSeen] = useState<Date>(new Date(Date.now() - 300000))
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLTextAreaElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  // Исправляем hydration mismatch
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Auto scroll to bottom when new messages arrive
   useEffect(() => {
     if (mounted) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
   }, [messages, mounted])
 
-  // Simulate typing indicator
   useEffect(() => {
     if (isTyping && mounted) {
       const timer = setTimeout(() => setIsTyping(false), 3000)
@@ -48,7 +54,6 @@ export default function ChatPage() {
     }
   }, [isTyping, mounted])
 
-  // Умные ответы от клиента (улучшенные на основе диалога)
   const getClientResponse = (userMessage: string) => {
     const msg = userMessage.toLowerCase()
 
@@ -80,8 +85,7 @@ export default function ChatPage() {
       return "Workly is all about connecting talented freelancers with great opportunities. The meme should feel authentic to that experience - not too corporate, you know?"
     }
 
-    // Дефолтные ответы
-    const defaultResponses = [
+   const defaultResponses = [
       "That sounds interesting! Tell me more about your approach.",
       "I like where you're going with this. How do you plan to execute it?",
       "Great point! Let's brainstorm some more ideas around that.",
@@ -93,69 +97,35 @@ export default function ChatPage() {
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)]
   }
 
-  // Автоматический ответ от клиента на сообщения
   useEffect(() => {
     if (messages.length > 0) {
       const lastMessage = messages[messages.length - 1]
 
-      // Если последнее сообщение от фрилансера, клиент отвечает
       if (lastMessage.sender === 'freelancer' && !isTyping) {
         setIsTyping(true)
 
         const timeout = setTimeout(() => {
           const response = getClientResponse(lastMessage.text)
 
-          setMessages(prev => [...prev, {
-            id: Date.now() + Math.random(), // Уникальный ID
+          setMessages((prev: Message[]) => [...prev, {
+            id: Date.now() + Math.random(),
             text: response,
             sender: 'client',
             timestamp: new Date(),
             status: 'read'
           }])
           setIsTyping(false)
-        }, 1500 + Math.random() * 2000) // 1.5-3.5 секунд задержки
+        }, 1500 + Math.random() * 2000)
 
         return () => clearTimeout(timeout)
       }
     }
-  }, [messages.length]) // Изменили dependency
-
-  // Убираем случайные ответы
-  // useEffect(() => {
-  //   if (!mounted) return
-
-  //   const interval = setInterval(() => {
-  //     if (Math.random() > 0.85) { // 15% chance every 15 seconds
-  //       setIsTyping(true)
-  //       setTimeout(() => {
-  //         const responses = [
-  //           "Sounds good to me!",
-  //           "Let me check my calendar and get back to you.",
-  //           "I'll send over the additional requirements shortly.",
-  //           "Thanks for the update!",
-  //           "Looking forward to seeing the progress."
-  //         ]
-  //         const randomResponse = responses[Math.floor(Math.random() * responses.length)]
-
-  //         setMessages(prev => [...prev, {
-  //           id: Date.now(),
-  //           text: randomResponse,
-  //           sender: 'client',
-  //           timestamp: new Date(),
-  //           status: 'read'
-  //         }])
-  //         setIsTyping(false)
-  //       }, 2000)
-  //     }
-  //   }, 15000)
-
-  //   return () => clearInterval(interval)
-  // }, [mounted])
+  }, [messages.length]) 
 
   const handleSendMessage = () => {
     if (!newMessage.trim()) return
 
-    const message = {
+    const message: Message = {
       id: Date.now(),
       text: newMessage,
       sender: 'freelancer',
@@ -163,24 +133,23 @@ export default function ChatPage() {
       status: 'sent'
     }
 
-    setMessages(prev => [...prev, message])
+    setMessages((prev: Message[]) => [...prev, message])
     setNewMessage('')
 
-    // Simulate message status updates
     setTimeout(() => {
-      setMessages(prev => prev.map(msg =>
+      setMessages((prev: Message[]) => prev.map((msg: Message) =>
         msg.id === message.id ? { ...msg, status: 'delivered' } : msg
       ))
     }, 1000)
 
     setTimeout(() => {
-      setMessages(prev => prev.map(msg =>
+      setMessages((prev: Message[]) => prev.map((msg: Message) =>
         msg.id === message.id ? { ...msg, status: 'read' } : msg
       ))
     }, 3000)
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
@@ -222,7 +191,6 @@ export default function ChatPage() {
     }
   }
 
-  // Loading state пока роутер не готов
   if (!mounted || !id) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white flex items-center justify-center">
@@ -234,34 +202,14 @@ export default function ChatPage() {
     )
   }
 
-  // Показываем ошибку если task не найден - УБИРАЕМ ЭТО
-  // if (!task) {
-  //   return (
-  //     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white flex items-center justify-center">
-  //       <div className="text-center space-y-4">
-  //         <div className="text-6xl">❌</div>
-  //         <h1 className="text-2xl font-bold text-red-400">Task Not Found</h1>
-  //         <p className="text-gray-300">Task with ID "{id}" does not exist.</p>
-  //         <Link 
-  //           href="/tasks" 
-  //           className="inline-block px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
-  //         >
-  //           Back to Tasks
-  //         </Link>
-  //       </div>
-  //     </div>
-  //   )
-  // }
 
-  // Получаем имя клиента или используем дефолтное (ДАЖЕ ЕСЛИ TASK НЕ НАЙДЕН)
   const getTaskInfo = (taskId: string | string[] | undefined) => {
-    // Проверяем ID и возвращаем соответствующие данные
-    const foundTask = tasks.find(t => t.id === taskId)
+    const foundTask = tasks.find((t: Task) => t.id === taskId)
 
     if (foundTask) {
       return {
         clientName: foundTask.client || foundTask.clientName || 'Sarah Wilson',
-        title: foundTask.title
+        title: foundTask.title || (foundTask as any).name || 'Create viral meme for Workly'
       }
     }
 
@@ -271,10 +219,9 @@ export default function ChatPage() {
         title: 'Create viral meme for Workly'
       }
     }
-    // Дефолтные данные для других ID
     return {
-      clientName: task?.client || task?.clientName || 'John Doe',
-      title: task?.title || task?.name || 'Modern E-commerce Website Development'
+      clientName: (task as Task)?.client || (task as Task)?.clientName || 'John Doe',
+      title: (task as Task)?.title || (task as Task)?.name || 'Modern E-commerce Website Development'
     }
   }
 
@@ -354,7 +301,7 @@ export default function ChatPage() {
             </div>
             <div className="ml-auto">
               <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium">
-                {task?.status === 'accepted' ? 'In Progress' : 'Active'}
+                {(task as Task)?.status === 'accepted' ? 'In Progress' : 'Active'}
               </span>
             </div>
           </div>
@@ -460,12 +407,7 @@ export default function ChatPage() {
                     ref={inputRef}
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault()
-                        handleSendMessage()
-                      }
-                    }}
+                    onKeyDown={handleKeyPress}
                     placeholder="Type your message... (Press Enter to send)"
                     className="w-full h-12 px-4 pr-12 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
                   />

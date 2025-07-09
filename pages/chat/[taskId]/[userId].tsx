@@ -1,4 +1,3 @@
-// pages/chat/[taskId]/[userId].tsx
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -40,6 +39,7 @@ interface ChatData {
     clientConfirmed?: boolean
     assignedTo?: string
     createdBy?: string
+    createdAt?: string
   }
   participants: {
     client: User | null
@@ -58,12 +58,13 @@ export default function ChatPage() {
   const [error, setError] = useState<string | null>(null)
   const [newMessage, setNewMessage] = useState('')
   const [sending, setSending] = useState(false)
-  const [selectedFile, setSelectedFile] = useState(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
-  const fileInputRef = useRef(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  
   const confirmWork = async (taskId: string) => {
     try {
       console.log('Worker confirming work for task:', taskId)
@@ -120,7 +121,7 @@ export default function ChatPage() {
     }
   }
 
-  const markTaskCompleted = async (taskId) => {
+  const markTaskCompleted = async (taskId: string) => {
     try {
       const token = localStorage.getItem('token')
       if (!token) {
@@ -142,7 +143,6 @@ export default function ChatPage() {
 
       const result = await response.json()
 
-      // ИСПРАВЛЕННАЯ СТРОКА: используем setChatData вместо setTask
       setChatData(prevChatData => {
         if (!prevChatData) return prevChatData;
 
@@ -158,26 +158,21 @@ export default function ChatPage() {
 
       console.log('Task marked as completed successfully!')
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error marking task as completed:', error)
       showWorklyToast(`Failed to mark task as completed: ${error.message}`)
     }
   };
 
-  // Добавить эти функции в компонент чата после существующих функций
-
-  // Функция для обработки выбора файла
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Проверка размера файла (максимум 10MB)
     if (file.size > 10 * 1024 * 1024) {
       showWorklyToast('File size must be less than 10MB')
       return
     }
 
-    // Проверка типа файла
     const allowedTypes = [
       'image/jpeg', 'image/png', 'image/gif', 'image/webp',
       'application/pdf', 'text/plain', 'application/msword',
@@ -193,7 +188,6 @@ export default function ChatPage() {
     uploadFile(file)
   }
 
-  // Функция для загрузки файла
   const uploadFile = async (file: File) => {
     setUploading(true)
 
@@ -201,7 +195,6 @@ export default function ChatPage() {
       const formData = new FormData()
       formData.append('file', file)
 
-      // Безопасное получение параметров
       const currentTaskId = typeof taskId === 'string' ? taskId : String(taskId)
       const currentChatId = chatData?.chat?.id || ''
 
@@ -228,10 +221,9 @@ export default function ChatPage() {
 
       const result = await response.json()
 
-      // Отправить сообщение с файлом
       await sendFileMessage(result.fileUrl, result.fileName, file.type)
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Upload error:', error)
       const errorMessage = error instanceof Error ? error.message : 'Failed to upload file'
       showWorklyToast(errorMessage)
@@ -239,14 +231,12 @@ export default function ChatPage() {
       setUploading(false)
       setSelectedFile(null)
 
-      // Очистить input
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
     }
   }
 
-  // Функция для отправки сообщения с файлом
   const sendFileMessage = async (fileUrl: string, fileName: string, fileType: string) => {
     if (!chatData) return
 
@@ -256,7 +246,6 @@ export default function ChatPage() {
         throw new Error('No authentication token found')
       }
 
-      // Безопасное получение параметров из router
       const currentTaskId = typeof taskId === 'string' ? taskId : String(taskId)
       const currentUserId = typeof userId === 'string' ? userId : String(userId)
 
@@ -281,7 +270,6 @@ export default function ChatPage() {
 
       const data = await response.json()
 
-      // Обновляем состояние чата
       setChatData(prev => {
         if (!prev) return prev
         return {
@@ -292,7 +280,7 @@ export default function ChatPage() {
 
       console.log('File message sent successfully!')
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Send file message error:', error)
       const errorMessage = error instanceof Error ? error.message : 'Failed to send file message'
       showWorklyToast(errorMessage)
@@ -300,7 +288,6 @@ export default function ChatPage() {
   }
 
 
-  // Исправляем hydration mismatch
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -312,26 +299,12 @@ export default function ChatPage() {
     }
   }, [mounted, router.isReady, taskId, userId])
 
-  // Автоскролл к последнему сообщению
   useEffect(() => {
     if (mounted) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
   }, [chatData?.chat.messages, mounted])
 
-  // Периодическое обновление чата (каждые 3 секунды)
-  /*useEffect(() => {
-    if (!mounted || !chatData || !router.isReady) return
-
-    const interval = setInterval(() => {
-      if (router.isReady && taskId && userId && typeof taskId === 'string' && typeof userId === 'string') {
-        loadChat(taskId, userId, true) // silent update
-      }
-    }, 3000)
-
-    return () => clearInterval(interval)
-  }, [mounted, chatData, router.isReady, taskId, userId])
-*/
   const loadChat = async (taskId: string, userId: string, silent = false) => {
     try {
       if (!silent) setLoading(true)
@@ -390,8 +363,7 @@ export default function ChatPage() {
       const data = await response.json()
 
       if (response.ok) {
-        // Обновляем чат с новым сообщением
-        setChatData(prev => prev ? {
+       setChatData(prev => prev ? {
           ...prev,
           chat: data.chat
         } : null)
@@ -518,7 +490,6 @@ export default function ChatPage() {
   const otherUser = currentUserId === participants.client?.id ? participants.freelancer : participants.client
   const otherUserInitials = otherUser?.username.split(' ').map(n => n[0]).join('').toUpperCase() || '??'
 
-  // Группируем сообщения по дням
   const groupedMessages = chat.messages.reduce((groups: { [key: string]: ChatMessage[] }, message) => {
     const date = formatDate(message.timestamp)
     if (!groups[date]) {
@@ -751,8 +722,6 @@ export default function ChatPage() {
           {/* Right Side - Chat Area */}
           <div className="flex-1 flex flex-col">
 
-
-
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4">
               <div className="space-y-6">
@@ -798,7 +767,6 @@ export default function ChatPage() {
                               } ${showAvatar ? '' : isCurrentUser ? 'rounded-tr-lg' : 'rounded-tl-lg'
                               }`}>
 
-                              {/* Если сообщение содержит файл */}
                               {(message as any).fileUrl ? (
                                 <div className="space-y-2">
                                   {/* Превью файла */}
@@ -815,7 +783,6 @@ export default function ChatPage() {
                                       </div>
                                     </div>
                                   ) : (
-                                    // Для других типов файлов
                                     <div
                                       className="flex items-center gap-3 p-3 bg-black/20 rounded-lg cursor-pointer hover:bg-black/30 transition-colors border border-white/10"
                                       onClick={() => window.open((message as any).fileUrl, '_blank')}
@@ -847,13 +814,11 @@ export default function ChatPage() {
                                     </div>
                                   )}
 
-                                  {/* Текст сообщения, если есть */}
                                   {message.text && message.text !== `📎 ${(message as any).fileName}` && (
                                     <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
                                   )}
                                 </div>
                               ) : (
-                                // Обычное текстовое сообщение
                                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
                               )}
                             </div>
@@ -897,7 +862,6 @@ export default function ChatPage() {
                 <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/30 rounded-2xl shadow-xl p-3">
                   <div className="flex items-center gap-3">
 
-                    {/* ДОБАВЛЕНО - Скрытый input для файлов */}
                     <input
                       ref={fileInputRef}
                       type="file"
@@ -906,7 +870,6 @@ export default function ChatPage() {
                       accept="image/*,.pdf,.doc,.docx,.txt"
                     />
 
-                    {/* ИЗМЕНЕНО - Кнопка прикрепления файлов */}
                     <button
                       onClick={() => fileInputRef.current?.click()}
                       disabled={uploading || sending}
